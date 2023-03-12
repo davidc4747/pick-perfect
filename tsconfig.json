@@ -3,6 +3,7 @@
     "exclude": ["node_modules", ".vscode"],
     "compilerOptions": {
         "target": "esnext",
+        "module": "esnext",
         "moduleResolution": "Node",
         "jsx": "react",
 

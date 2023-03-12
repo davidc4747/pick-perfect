@@ -2,16 +2,31 @@
     "name": "one-trick-electron",
     "version": "1.0.0",
     "description": "",
-    "main": "src/main/main.js",
+    "targets": {
+        "main": {
+            "source": "src/main/main.ts",
+            "distDir": "dist/main"
+        },
+        "renderer": {
+            "source": "src/renderer/index.html",
+            "distDir": "dist/renderer"
+        }
+    },
+    "main": "dist/main.js",
     "scripts": {
-        "start": "electron ."
+        "start": "electron .",
+        "dev": "parcel watch",
+        "build": "parcel build"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "devDependencies": {
+        "parcel": "^2.8.3"
+    },
+    "dependencies": {
         "electron": "^23.1.3",
-        "vite": "^4.1.4",
-        "vitest": "^0.29.2"
+        "node-fetch-commonjs": "^3.2.4",
+        "ws": "^8.13.0"
     }
 }
