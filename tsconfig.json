@@ -1,0 +1,23 @@
+{
+    "include": ["**/*.js", "**/*.ts", "**/*.tsx", "**/*.jsx"],
+    "exclude": ["node_modules", ".vscode"],
+    "compilerOptions": {
+        "target": "esnext",
+        "moduleResolution": "Node",
+        "jsx": "react",
+
+        "allowJs": true,
+        "checkJs": true,
+
+        "esModuleInterop": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "allowUnreachableCode": false,
+        "exactOptionalPropertyTypes": true,
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true
+    }
+}
