@@ -160,15 +160,7 @@ export function onPlayerPickCompleted(
     #Game Ended
 \* ======================== */
 
-interface RecognitionItem {
-    displayName: string;
-    gameId: number;
-    summonerId: number;
-}
-
-export function onHonorCompleted(
-    callback: (data: RecognitionItem[]) => void
-): void {
+export function onHonorCompleted(callback: (data: any) => void): void {
     onEvent("CREATE", "/lol-honor-v2/v1/vote-completion", callback);
     onEvent("CREATE", "/lol-honor-v2/v1/recognition-history", callback);
 }

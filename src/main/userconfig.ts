@@ -1,23 +1,4 @@
-import { AssignedPosition } from "../shared/types";
-
-/* ======================== *\
-    #User Config
-\* ======================== */
-
-interface UserConfig {
-    all: RoleSelections;
-    top: RoleSelections;
-    jungle: RoleSelections;
-    middle: RoleSelections;
-    utility: RoleSelections;
-    bottom: RoleSelections;
-}
-interface RoleSelections {
-    bans: number[]; // if ban is empty, use the generic BanList
-    hover: number[]; // If hover is empty, use the PickList
-    picks: number[];
-    spells: number[];
-}
+import { AssignedPosition, UserConfig } from "../shared/types";
 
 const USER_CONFIG: UserConfig = {
     all: {

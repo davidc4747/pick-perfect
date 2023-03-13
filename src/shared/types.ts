@@ -1,3 +1,25 @@
+/* ======================== *\
+    #User Config
+\* ======================== */
+
+export interface UserConfig {
+    all: RoleSelections;
+    top: RoleSelections;
+    jungle: RoleSelections;
+    middle: RoleSelections;
+    utility: RoleSelections;
+    bottom: RoleSelections;
+}
+interface RoleSelections {
+    bans: number[]; // if ban is empty, use the generic BanList
+    hover: number[]; // If hover is empty, use the PickList
+    picks: number[];
+}
+
+/* ======================== *\
+    #Summoner
+\* ======================== */
+
 export interface CurrentSummoner {
     accountId: number;
     displayName: string;
