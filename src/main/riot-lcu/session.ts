@@ -1,4 +1,8 @@
-import { Action, AssignedPosition, ChampSelectSession } from "./types";
+import {
+    Action,
+    AssignedPosition,
+    ChampSelectSession,
+} from "../../shared/types";
 
 /* ======================== *\
     #Session Helpers
@@ -53,7 +57,7 @@ export function getMyAssignedPosition(
 export function getUnPickableChampions(session: ChampSelectSession): number[] {
     const { actions, localPlayerCellId } = session;
     if (!actions) {
-        // DEBUGGING
+        // TODO: DEBUGGING
         console.log("ERRROR Incoming!!!!");
         console.log("ERRROR Incoming!!!!");
         console.log("ERRROR Incoming!!!!");

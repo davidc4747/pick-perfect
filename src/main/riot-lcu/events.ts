@@ -1,4 +1,4 @@
-import { ChampSelectSession, Action } from "./types";
+import { ChampSelectSession, Action } from "../../shared/types";
 import { onEvent } from "./internal/lcu-websocket";
 
 /* ======================== *\

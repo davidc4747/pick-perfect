@@ -87,6 +87,8 @@ export type AssignedPosition =
     | "utility"
     | "bottom";
 
+// type Phase = "hover" | "ban" | "pick";
+
 export interface TeamMember {
     assignedPosition: AssignedPosition;
     cellId: number;

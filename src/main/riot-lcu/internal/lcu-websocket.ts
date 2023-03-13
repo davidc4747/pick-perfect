@@ -29,9 +29,9 @@ let eventList: Event[] = [];
     #
 \* ======================== */
 
-export function connect() {
+export async function connect(): Promise<void> {
     const { host, port, username, password, authorization, agent } =
-        getCredentials();
+        await getCredentials();
 
     ws = new WebSocket(`wss://${username}:${password}@${host}:${port}`, {
         Authorization: authorization,
@@ -76,9 +76,9 @@ export function onEvent(
     callback: (data: any) => void
 ) {
     // if not connected, then connect first
-    if (!ws) {
-        connect();
-    }
+    // if (!ws) {
+    //     connect();
+    // }
 
     eventList.push({
         eventType,

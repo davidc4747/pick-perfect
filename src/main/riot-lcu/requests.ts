@@ -1,5 +1,5 @@
 import { sendRequest } from "./internal/lcu-https";
-import { Action, ChampSelectSession } from "./types";
+import { Action, ChampSelectSession } from "../../shared/types";
 
 /* ======================== *\
     #Summoner
