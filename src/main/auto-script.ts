@@ -4,18 +4,26 @@ import {
     onMatchFound,
     onHonorCompleted,
     onEnteredChampionSelect,
+    onPlayerBanAction,
+    onPlayerPickChanged,
+    onPlayerPickCompleted,
+    onExitChampionSelect,
+    onPlayerPickAction,
 } from "./riot-lcu/events";
 import {
+    getSession,
     openRankedLobby,
     acceptReadyCheck,
     startMatchmaking,
     hoverChampion,
+    banChampion,
+    pickChampion,
 } from "./riot-lcu/requests";
 import {
     getMyPickAction,
     getMyAssignedPosition,
     getUnPickableChampions,
-} from "./riot-lcu/session";
+} from "./riot-lcu/session-helpers";
 import { getHoverList, getBanList, getPickList } from "./userconfig";
 
 /* ======================== *\
@@ -71,4 +79,70 @@ export async function startAutoScript() {
             await hoverChampion(pickAction, hoverID);
         }
     });
+
+    /* ------------------------- *\
+        #Auto-Ban
+    \* ------------------------- */
+
+    onPlayerBanAction(async function (
+        banAction: Action,
+        session: ChampSelectSession
+    ): Promise<void> {
+        // Give the other players a chance to ban first.
+        const { timer } = session;
+        await wait(timer.adjustedTimeLeftInPhase - 4000);
+
+        const updatedSession = await getSession(); // Grab an Updated Version of Session
+        if (updatedSession) {
+            const myRole = getMyAssignedPosition(updatedSession);
+            const disabledChampions = getUnPickableChampions(updatedSession);
+
+            if (myRole && banAction) {
+                const banID =
+                    getBanList(myRole).find(
+                        (id: number) => !disabledChampions.includes(id)
+                    ) ?? 0;
+
+                console.log("Ban:", banID);
+                await banChampion(banAction, banID);
+            }
+        }
+    });
+
+    /* ------------------------- *\
+        #Auto-Pick
+    \* ------------------------- */
+
+    let timeout: any;
+    // Chance the timer is Player picks manually or Champ Select ends
+    onPlayerPickChanged(() => clearTimeout(timeout));
+    onPlayerPickCompleted(() => clearTimeout(timeout));
+    onExitChampionSelect(() => clearTimeout(timeout));
+    onPlayerPickAction(async function (
+        pickAction: Action,
+        session: ChampSelectSession
+    ): Promise<void> {
+        // If only a few seconds left. Lock-in something for them.
+        timeout = setTimeout(
+            async () => await pickMyChampion(),
+            session.timer.adjustedTimeLeftInPhase - 3000
+        );
+    });
+    async function pickMyChampion(): Promise<void> {
+        const updatedSession = await getSession(); // Grab an up to date Version of Session
+        if (updatedSession) {
+            const myRole = getMyAssignedPosition(updatedSession);
+            const disabledChampions = getUnPickableChampions(updatedSession);
+            const updatedPickAction = getMyPickAction(updatedSession);
+            if (myRole && updatedPickAction) {
+                const pickID =
+                    getPickList(myRole).find(
+                        (id: number) => !disabledChampions.includes(id)
+                    ) ?? 0;
+
+                console.log("Pick:", myRole, pickID);
+                await pickChampion(updatedPickAction, pickID);
+            }
+        }
+    }
 }
