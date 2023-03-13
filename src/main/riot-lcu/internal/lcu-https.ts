@@ -7,12 +7,12 @@ import { getCredentials } from "./credentials";
 
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
-export function sendRequest(
+export async function sendRequest(
     method: HttpMethod,
     APIendpoint: string,
     body?: any
 ): Promise<any> {
-    const { host, port, authorization, agent } = getCredentials();
+    const { host, port, authorization, agent } = await getCredentials();
 
     const options = {
         method: method.toUpperCase(),

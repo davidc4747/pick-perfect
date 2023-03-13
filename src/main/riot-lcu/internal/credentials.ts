@@ -1,3 +1,4 @@
+import { exec } from "child_process";
 import * as https from "https";
 
 const RIOT_GAMES_CERT = `
@@ -28,29 +29,95 @@ XWehWA==
 -----END CERTIFICATE-----
 `;
 
-const RiotAPI = {
-    host: "127.0.0.1",
-    port: 54836,
-    username: "riot",
-    password: "kqPmxt7eGGJv5aKRnt4GkQ",
-};
-
 /* ======================== *\
     #
 \* ======================== */
 
-export function getCredentials() {
-    const sslConfiguredAgent = new https.Agent({ ca: RIOT_GAMES_CERT });
-    const authentication = Buffer.from(
-        `${RiotAPI.username}:${RiotAPI.password}`
-    );
-    return {
-        ...RiotAPI,
-        authorization: `Basic ${authentication.toString("base64")}`,
-        agent: sslConfiguredAgent,
-    };
+interface Credentials {
+    host: string;
+    protocol: string;
+    username: string;
+    password: string;
+    port: string;
+    authorization: string;
+    agent: https.Agent;
 }
 
-function getlockfile() {
-    //..
+export async function getCredentials(): Promise<Credentials> {
+    let timer: any;
+    return new Promise(async function tick(resolve, reject) {
+        // Keep trying until something Comes back.
+        const data = await getLeagueProccessData();
+        if (data) {
+            resolve(data);
+        } else {
+            timer = setTimeout(tick, 250, resolve, reject);
+        }
+    });
+}
+
+async function getLeagueProccessData(): Promise<Credentials | null> {
+    const name = "LeagueClientUx";
+    const isWindows = process.platform === "win32";
+
+    // Get the correct command for the Operating System
+    // NOTE: Credit for this comes from https://github.com/matsjla/league-connect/blob/master/src/authentication.ts
+    let command: string;
+    if (isWindows) {
+        command = `Get-CimInstance -Query "SELECT * from Win32_Process WHERE name LIKE '${name}.exe'" | Select-Object CommandLine | fl`;
+    } else {
+        command = `ps x -o args | grep '${name}'`;
+    }
+
+    try {
+        // Parse data from the command output
+        const map = new Map<string, string>();
+        let stdout: string = await execAsync(
+            command,
+            isWindows ? { shell: "powershell" } : {}
+        );
+        stdout
+            .replaceAll(/[\s\r\n]+/g, " ")
+            .split('" "--')
+            .filter((str, index) => Boolean(str) && index > 0)
+            .forEach((str) => {
+                const [key, value] = str.split("=");
+                map.set(key, value ?? "");
+            });
+
+        const password = map.get("remoting-auth-token") ?? "";
+        const sslConfiguredAgent = new https.Agent({ ca: RIOT_GAMES_CERT });
+        const authentication = Buffer.from(`riot:${password}`);
+
+        return {
+            // processName: map.get("app-name") ?? "",
+            // processID: map.get("app-pid") ?? "",
+            protocol: "https",
+            host: "127.0.0.1",
+            port: map.get("app-port") ?? "",
+            username: "riot",
+            password,
+            authorization: `Basic ${authentication.toString("base64")}`,
+            agent: sslConfiguredAgent,
+        };
+    } catch (err) {
+        return null;
+    }
+}
+
+/* ======================== *\
+    # Utils
+\* ======================== */
+
+async function execAsync(command: string, options: any): Promise<any> {
+    return new Promise(function (resolve, reject) {
+        exec(command, options, function (err, stdout, stderr) {
+            if (err) {
+                console.error(err, stderr);
+                reject(null);
+            } else {
+                resolve(stdout);
+            }
+        });
+    });
 }
