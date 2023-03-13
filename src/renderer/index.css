@@ -1,0 +1,114 @@
+/* ======================== *\
+    #Variables
+\* ======================== */
+
+:root {
+    /* Colors */
+    --gold: #785a28;
+    --black: #09141b;
+    --white: #fbfbfb;
+    --light-grey: #868479;
+    --grey: #24282c;
+
+    /* Type Scaling */
+    --header1: 1.8rem;
+    --header2: 1.6rem;
+    --header3: 1.4rem;
+    --header4: 1.2rem;
+    --header5: 1.1rem;
+    --paragraph: 1rem;
+    --helperText: 0.8rem;
+    --copyrightText: 0.7rem;
+
+    /* Theme */
+    --primaryColor: var(--gold);
+    --secondaryColor: var(--grey);
+    --background: var(--black);
+    --textColor: var(--light-grey);
+    --textColorInverted: black;
+}
+
+/* ======================== *\
+    #General
+\* ======================== */
+
+* {
+    box-sizing: border-box;
+}
+
+body,
+html {
+    padding: 0;
+    margin: 0;
+
+    color: var(--textColor);
+    background-color: var(--background);
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+/* ======================== *\
+    #Headers
+\* ======================== */
+
+h1 {
+    font-size: var(--header1);
+}
+h2 {
+    font-size: var(--header2);
+}
+h3 {
+    font-size: var(--header3);
+}
+h4 {
+    font-size: var(--header4);
+}
+h5 {
+    font-size: var(--header5);
+}
+
+/* ======================== *\
+    #Form
+\* ======================== */
+
+button {
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+
+    color: var(--textColor);
+    background-color: var(--secondaryColor);
+    border: 1px solid var(--primaryColor);
+
+    transition: 0.25s ease-out color;
+}
+button:hover {
+    color: var(--white);
+}
+
+/* ------------------------- *\
+    #Input
+\* ------------------------- */
+
+input {
+    padding: 0.6rem 1rem;
+    border: 1px solid transparent;
+
+    color: var(--white);
+    background-color: var(--secondaryColor);
+}
+input::placeholder {
+    color: var(--textColor);
+    transition: 0.25s ease-out color;
+}
+input:hover::placeholder,
+input:focus::placeholder {
+    color: var(--textColor);
+}
+input:focus {
+    outline: none;
+    border: 1px solid var(--primaryColor);
+}

@@ -5,7 +5,7 @@
         "target": "esnext",
         "module": "esnext",
         "moduleResolution": "Node",
-        "jsx": "react",
+        "jsx": "react-jsx",
 
         "allowJs": true,
         "checkJs": true,

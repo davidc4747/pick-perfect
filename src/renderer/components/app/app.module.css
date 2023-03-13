@@ -1,0 +1,11 @@
+/* ===================== *\
+    # App
+\* ===================== */
+
+.app {
+    width: 640px;
+    height: 720px;
+
+    margin: 0 auto;
+    padding-top: 3rem;
+}

@@ -1,0 +1,86 @@
+/* ======================== *\
+    # header
+\* ======================== */
+
+.header {
+    padding: 0.2rem 0.4rem;
+
+    color: var(--primaryColor);
+    border-bottom: 2px solid var(--primaryColor);
+}
+
+/* ===================== *\
+    # Champion Selecitons
+\* ===================== */
+
+.selectionList {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.selectionItem {
+    padding-left: 0;
+    transition: 0.2s ease-out padding-left;
+    user-select: none;
+}
+.selectionItemDragStart {
+    opacity: 0.4;
+    filter: grayscale(80%);
+}
+.selectionItemDragOver {
+    padding-left: 120px;
+}
+
+.selectionItem > img {
+    width: 120px;
+    height: 120px;
+    background-color: var(--secondaryColor);
+}
+
+.selectionItem > button {
+    cursor: grab;
+}
+
+/* ======================== *\
+    #Default Selections
+\* ======================== */
+
+.default {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+
+    width: 120px;
+    height: 120px;
+    background-color: var(--secondaryColor);
+
+    cursor: pointer;
+    position: relative;
+}
+
+.default > img {
+    width: 50%;
+    filter: grayscale(100%);
+}
+
+/* ======================== *\
+    # Add Champion Btn
+\* ======================== */
+
+.addButton {
+    width: 120px;
+    height: 120px;
+
+    cursor: pointer;
+    transition: 0.15s ease-out transform, 0.15s ease-out border,
+        0.15s ease-out color;
+
+    background-color: var(--secondaryColor);
+    border: 1px solid var(--textColor);
+}
+.addButton:hover {
+    color: var(--primaryColor);
+    border: 1px solid var(--primaryColor);
+}

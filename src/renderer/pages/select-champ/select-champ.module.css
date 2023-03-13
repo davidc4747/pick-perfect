@@ -1,0 +1,41 @@
+/* ===================== *\
+    # Header Section
+\* ===================== */
+
+.searchbar {
+    display: flex;
+    margin-top: 0.8rem;
+}
+.searchbarInput {
+    flex-grow: 1;
+}
+.searchbarClear {
+    border: none;
+    margin-left: 2px;
+}
+
+/* ======================== *\
+    # Full Champion List
+\* ======================== */
+
+.champList {
+    user-select: none;
+    padding: 1rem 0;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 120px);
+    gap: 0.6rem;
+}
+
+.championItem > img {
+    /* Without this the .champItem has an extra 4px on the bottom and idk why */
+    display: block;
+
+    min-width: 120px;
+    min-height: 120px;
+    background-color: var(--secondaryColor);
+}
+
+.championItem > button {
+    font-size: 4rem;
+}
