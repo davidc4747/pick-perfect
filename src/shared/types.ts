@@ -44,8 +44,98 @@ export interface CurrentSummoner {
 }
 
 /* ======================== *\
+    #Lobby
+\* ======================== */
+
+export interface Lobby {
+    canStartActivity: boolean;
+    gameConfig: {
+        allowablePremadeSizes: number[];
+        customLobbyName: string;
+        customMutatorName: string;
+        customRewardsDisabledReasons: [];
+        customSpectatorPolicy: string;
+        customSpectators: [];
+        customTeam100: [];
+        customTeam200: [];
+        gameMode: string;
+        isCustom: boolean;
+        isLobbyFull: boolean;
+        isTeamBuilderManaged: boolean;
+        mapId: number;
+        maxHumanPlayers: number;
+        maxLobbySize: number;
+        maxTeamSize: number;
+        pickType: string;
+        premadeSizeAllowed: boolean;
+        queueId: number;
+        showPositionSelector: boolean;
+    };
+    invitations: LobbyInvatation[];
+    localMember: LobbyMember;
+    members: LobbyMember[];
+    multiUserChatId: string;
+    multiUserChatJWT: string;
+    multiUserChatPassword: string;
+    partyId: string;
+    partyType: string;
+    restrictions: [];
+    scarcePositions: string[]; // ["JUNGLE", "BOTTOM"] /* In Demand o.o */;
+    warnings: [];
+}
+
+interface LobbyMember {
+    allowedChangeActivity: boolean;
+    allowedInviteOthers: boolean;
+    allowedKickOthers: boolean;
+    allowedStartActivity: boolean;
+    allowedToggleInvite: boolean;
+    autoFillEligible: boolean;
+    autoFillProtectedForPromos: boolean;
+    autoFillProtectedForSoloing: boolean;
+    autoFillProtectedForStreaking: boolean;
+    botChampionId: number;
+    botDifficulty: string;
+    botId: string;
+    firstPositionPreference: AssignedPosition; //"UTILITY";
+    isBot: boolean;
+    isLeader: boolean;
+    isSpectator: boolean;
+    puuid: string;
+    ready: boolean;
+    secondPositionPreference: AssignedPosition; //"BOTTOM";
+    showGhostedBanner: boolean;
+    summonerIconId: number;
+    summonerId: number;
+    summonerInternalName: string;
+    summonerLevel: number;
+    summonerName: string;
+    teamId: number;
+}
+
+interface LobbyInvatation {
+    invitationId: string;
+    invitationType: string;
+    state: string;
+    timestamp: string;
+    toSummonerId: number;
+    toSummonerName: string;
+}
+
+/* ======================== *\
     #Champ Select
 \* ======================== */
+
+export type ChampSelectPhase = "PLANNING" | "BAN_PICK" | "FINALIZATION";
+
+export type AssignedPosition =
+    | "top"
+    | "jungle"
+    | "middle"
+    | "utility"
+    | "bottom";
+
+// type Phase = "hover" | "ban" | "pick";
 
 export interface ChampSelectSession {
     actions: Action[][];
@@ -86,30 +176,17 @@ export interface ChampSelectSession {
 
     myTeam: TeamMember[];
     theirTeam: TeamMember[];
-    timer: ChampSelectTimer;
+    timer: {
+        adjustedTimeLeftInPhase: number;
+        internalNowInEpochMs: number;
+        isInfinite: boolean;
+        phase: ChampSelectPhase;
+        totalTimeInPhase: number;
+    };
 
     pickOrderSwaps: any[];
     trades: any[];
 }
-
-export type ChampSelectPhase = "PLANNING" | "BAN_PICK" | "FINALIZATION";
-
-export interface ChampSelectTimer {
-    adjustedTimeLeftInPhase: number;
-    internalNowInEpochMs: number;
-    isInfinite: boolean;
-    phase: ChampSelectPhase;
-    totalTimeInPhase: number;
-}
-
-export type AssignedPosition =
-    | "top"
-    | "jungle"
-    | "middle"
-    | "utility"
-    | "bottom";
-
-// type Phase = "hover" | "ban" | "pick";
 
 export interface TeamMember {
     assignedPosition: AssignedPosition;

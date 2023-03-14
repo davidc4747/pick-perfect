@@ -1,26 +1,27 @@
 import { sendRequest } from "./internal/lcu-https";
-import { Action, ChampSelectSession } from "../../shared/types";
+import {
+    CurrentSummoner,
+    Lobby,
+    Action,
+    ChampSelectSession,
+} from "../../shared/types";
 
 /* ======================== *\
     #Summoner
 \* ======================== */
 
-export function getCurrentSummoner() {
-    return sendRequest("GET", "/lol-summoner/v1/current-summoner").then(
-        (response) => response.json()
-    );
+export function getCurrentSummoner(): Promise<CurrentSummoner> {
+    return sendRequest("GET", "/lol-summoner/v1/current-summoner");
 }
 
 /* ======================== *\
     #Lobby
 \* ======================== */
 
-export function openRankedLobby() {
-    return sendRequest("POST", "/lol-lobby/v2/lobby", { queueId: 420 }).then(
-        (response) => response.json()
-    );
+export function openRankedLobby(): Promise<Lobby> {
+    return sendRequest("POST", "/lol-lobby/v2/lobby", { queueId: 420 });
 }
-export function openPracticeToolLobby() {
+export function openPracticeToolLobby(): Promise<Lobby> {
     return sendRequest("POST", "/lol-lobby/v2/lobby", {
         customGameLobby: {
             configuration: {
@@ -36,36 +37,32 @@ export function openPracticeToolLobby() {
             lobbyPassword: null,
         },
         isCustom: true,
-    }).then((response) => response.json());
+    });
 }
 
 /* ======================== *\
     #Ready Check
 \* ======================== */
 
-export function startCustomLobby() {
-    return sendRequest(
-        "POST",
-        "/lol-lobby/v1/lobby/custom/start-champ-select"
-    ).then((response) => response.text());
+interface StartRespoonse {
+    failedPlayers: [];
+    success: boolean;
 }
 
-export function startMatchmaking() {
-    return sendRequest("POST", "/lol-lobby/v2/lobby/matchmaking/search").then(
-        (response) => response.text()
-    );
+export function startCustomLobby(): Promise<StartRespoonse> {
+    return sendRequest("POST", "/lol-lobby/v1/lobby/custom/start-champ-select");
 }
 
-export function acceptReadyCheck() {
-    return sendRequest("POST", "/lol-matchmaking/v1/ready-check/accept").then(
-        (response) => response.text()
-    );
+export function startMatchmaking(): Promise<""> {
+    return sendRequest("POST", "/lol-lobby/v2/lobby/matchmaking/search");
 }
 
-export function declineReadyCheck() {
-    return sendRequest("POST", "/lol-matchmaking/v1/ready-check/decline").then(
-        (response) => response.text()
-    );
+export function acceptReadyCheck(): Promise<any> {
+    return sendRequest("POST", "/lol-matchmaking/v1/ready-check/accept");
+}
+
+export function declineReadyCheck(): Promise<any> {
+    return sendRequest("POST", "/lol-matchmaking/v1/ready-check/decline");
 }
 
 /* ======================== *\
@@ -90,24 +87,15 @@ export async function getSession(): Promise<ChampSelectSession | undefined> {
 \* ------------------------- */
 
 export function getDisabledChampions(): Promise<number[]> {
-    return sendRequest(
-        "GET",
-        `/lol-champ-select/v1/disabled-champion-ids`
-    ).then((response) => response.json());
+    return sendRequest("GET", `/lol-champ-select/v1/disabled-champion-ids`);
 }
 
 export function getBannableChampions(): Promise<number[]> {
-    return sendRequest(
-        "GET",
-        `/lol-champ-select/v1/bannable-champion-ids`
-    ).then((response) => response.json());
+    return sendRequest("GET", `/lol-champ-select/v1/bannable-champion-ids`);
 }
 
 export function getPickableChampions(): Promise<number[]> {
-    return sendRequest(
-        "GET",
-        `/lol-champ-select/v1/pickable-champion-ids`
-    ).then((response) => response.json());
+    return sendRequest("GET", `/lol-champ-select/v1/pickable-champion-ids`);
 }
 
 /* ------------------------- *\
@@ -125,7 +113,7 @@ export function hoverChampion(
             championId,
             type: "pick",
         }
-    ).then((response) => response.text());
+    );
 }
 
 export function pickChampion(
@@ -140,7 +128,7 @@ export function pickChampion(
             completed: true,
             type: "pick",
         }
-    ).then((response) => response.text());
+    );
 }
 
 export function banChampion(
@@ -155,5 +143,5 @@ export function banChampion(
             completed: true,
             type: "ban",
         }
-    ).then((response) => response.text());
+    );
 }

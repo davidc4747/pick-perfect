@@ -13,7 +13,6 @@ export async function sendRequest(
     body?: any
 ): Promise<any> {
     const { host, port, authorization, agent } = await getCredentials();
-
     const options = {
         method: method.toUpperCase(),
         headers: {
@@ -24,5 +23,28 @@ export async function sendRequest(
         agent,
     };
 
-    return fetch(`https://${host}:${port}${APIendpoint}`, options);
+    // Send Request
+    const response = await fetch(
+        `https://${host}:${port}${APIendpoint}`,
+        options
+    );
+
+    // Try to Parse as JSON, if not use the string
+    let data: any = await response.text();
+    try {
+        data = JSON.parse(data);
+    } catch (err) {
+        // "data" is not valid JSON
+        // just use the original string value
+    }
+
+    // Some Error logging
+    if (response.status >= 300) {
+        console.error("ERROR Invalid riot-lcu request:", method, APIendpoint);
+        console.error("Request Body:", body);
+        console.error("Response:", data);
+    }
+
+    // Send usable data back :)
+    return data;
 }
