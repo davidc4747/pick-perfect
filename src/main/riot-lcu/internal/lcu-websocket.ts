@@ -43,7 +43,8 @@ export async function connect(): Promise<void> {
     ws.on("message", function (response: any) {
         const resString = response.toString();
         if (resString) {
-            const [opcode, eventName, data] = JSON.parse(resString) || [];
+            // [opcode, eventName, data]
+            const data = JSON.parse(resString)[2];
 
             for (const event of eventList) {
                 if (
@@ -60,10 +61,6 @@ export async function connect(): Promise<void> {
 
 export function disconnect() {
     ws.close();
-}
-
-export function subscribe(event: (data: any) => void) {
-    ws.send(JSON.stringify([MESSAGE_TYPES.SUBSCRIBE, event]));
 }
 
 export function clearEvents() {

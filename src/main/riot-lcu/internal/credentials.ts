@@ -44,15 +44,15 @@ interface Credentials {
 }
 
 export async function getCredentials(): Promise<Credentials> {
-    let timer: any;
-    return new Promise(async function tick(resolve, reject) {
+    return new Promise(function retry(resolve, reject) {
         // Keep trying until something Comes back.
-        const data = await getLeagueProccessData();
-        if (data) {
-            resolve(data);
-        } else {
-            timer = setTimeout(tick, 250, resolve, reject);
-        }
+        getLeagueProccessData().then(function tick(data) {
+            if (data) {
+                resolve(data);
+            } else {
+                setTimeout(retry, 250, resolve, reject);
+            }
+        });
     });
 }
 
@@ -72,7 +72,7 @@ async function getLeagueProccessData(): Promise<Credentials | null> {
     try {
         // Parse data from the command output
         const map = new Map<string, string>();
-        let stdout: string = await execAsync(
+        const stdout: string = await execAsync(
             command,
             isWindows ? { shell: "powershell" } : {}
         );

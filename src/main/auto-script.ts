@@ -45,7 +45,8 @@ export async function startAutoScript() {
     onMatchFound(async function () {
         // if you accept the request too fast, the animations don't play properly [DC]
         await wait(100);
-        await acceptReadyCheck();
+        const acceptData = await acceptReadyCheck();
+        console.log("acceptMathc Data:", acceptData);
     });
 
     onHonorCompleted(async function () {
@@ -64,6 +65,7 @@ export async function startAutoScript() {
     ): Promise<void> {
         console.log("---------------------");
         await wait(9350); // there's some animations playing, just wait for them to finish
+        console.log("Session:", session);
 
         const myRole = getMyAssignedPosition(session);
         const disabledChampions = getUnPickableChampions(session);
@@ -76,7 +78,8 @@ export async function startAutoScript() {
                 ) ?? 0;
 
             console.log("Hover: ", hoverID);
-            await hoverChampion(pickAction, hoverID);
+            const hoverData = await hoverChampion(pickAction, hoverID);
+            console.log("hoverData: ", hoverData);
         }
     });
 
@@ -104,7 +107,8 @@ export async function startAutoScript() {
                     ) ?? 0;
 
                 console.log("Ban:", banID);
-                await banChampion(banAction, banID);
+                const banData = await banChampion(banAction, banID);
+                console.log("banData:", banData);
             }
         }
     });
@@ -113,7 +117,7 @@ export async function startAutoScript() {
         #Auto-Pick
     \* ------------------------- */
 
-    let timeout: any;
+    let timeout: NodeJS.Timeout;
     // Chance the timer is Player picks manually or Champ Select ends
     onPlayerPickChanged(() => clearTimeout(timeout));
     onPlayerPickCompleted(() => clearTimeout(timeout));
@@ -141,7 +145,8 @@ export async function startAutoScript() {
                     ) ?? 0;
 
                 console.log("Pick:", myRole, pickID);
-                await pickChampion(updatedPickAction, pickID);
+                const pickData = await pickChampion(updatedPickAction, pickID);
+                console.log("pickData:", pickData);
             }
         }
     }

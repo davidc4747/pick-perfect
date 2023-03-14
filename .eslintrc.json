@@ -22,7 +22,8 @@
     "plugins": ["react", "jsx-a11y", "@typescript-eslint"],
     "settings": { "react": { "version": "detect" } },
     "rules": {
-        // "@typescript-eslint/no-explicit-any": 0,
+        "@typescript-eslint/no-explicit-any": 0,
+        "@typescript-eslint/ban-ts-comment": 0,
         "@typescript-eslint/no-empty-function": 0,
         "react/jsx-uses-react": "off",
         "react/react-in-jsx-scope": "off"
