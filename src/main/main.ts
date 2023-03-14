@@ -3,8 +3,9 @@ import { startAutoScript } from "./auto-script";
 
 app.whenReady().then(async function () {
     const win = new BrowserWindow({
-        width: 720,
-        height: 640,
+        // width: 640,
+        width: 760,
+        height: 720,
     });
 
     win.loadFile("dist/renderer/index.html");

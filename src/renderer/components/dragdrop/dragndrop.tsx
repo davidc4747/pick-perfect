@@ -8,7 +8,7 @@ import Droppable, { DropEffect } from "./droppable";
 
 interface PropTypes {
     data: any;
-    children: React.ReactElement;
+    children: ReactElement;
     dropEffect?: DropEffect;
     dragOverClass?: string;
     dragStartClass?: string;

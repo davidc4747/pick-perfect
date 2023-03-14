@@ -37,7 +37,7 @@ export function onExitChampionSelect(
 export function onPlayerBanAction(
     callback: (banAction: Action, session: ChampSelectSession) => void
 ): void {
-    let hasTriggered: boolean = false;
+    let hasTriggered = false;
     onEvent(
         "CREATE",
         "/lol-champ-select/v1/session",
@@ -74,7 +74,7 @@ export function onPlayerBanAction(
 export function onPlayerPickAction(
     callback: (pickAction: Action, session: ChampSelectSession) => void
 ): void {
-    let hasTriggered: boolean = false;
+    let hasTriggered = false;
     onEvent(
         "CREATE",
         "/lol-champ-select/v1/session",

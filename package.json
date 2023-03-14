@@ -21,7 +21,9 @@
     "scripts": {
         "start": "electron .",
         "dev": "parcel watch --no-cache",
-        "build": "parcel build"
+        "build": "parcel build",
+        "lint": "eslint src/**/*.{js,jsx,ts,tsx}",
+        "cypress": "cypress open"
     },
     "keywords": [],
     "author": "",
@@ -29,6 +31,12 @@
     "devDependencies": {
         "@types/react": "^18.0.28",
         "@types/react-dom": "^18.0.11",
+        "@typescript-eslint/eslint-plugin": "^5.55.0",
+        "cypress": "^12.7.0",
+        "eslint": "^8.36.0",
+        "eslint-plugin-jsx-a11y": "^6.7.1",
+        "eslint-plugin-react": "^7.32.2",
+        "eslint-plugin-react-hooks": "^4.6.0",
         "parcel": "^2.8.3",
         "parcel-reporter-static-files-copy": "^1.5.0",
         "process": "^0.11.10"

@@ -18,12 +18,12 @@ export default function Draggable({
     const child = Children.only(children);
     const [isDragging, setIsDragging] = useState(false);
 
-    function onDragEnd(e: any) {
+    function onDragEnd() {
         setIsDragging(false);
     }
 
-    function onDragStart(e: any) {
-        e.dataTransfer.setData("text/plain", JSON.stringify(data));
+    function onDragStart(e: DragEvent) {
+        e.dataTransfer?.setData("text/plain", JSON.stringify(data));
         setIsDragging(true);
     }
 
