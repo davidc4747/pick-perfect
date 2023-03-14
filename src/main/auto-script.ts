@@ -3,6 +3,7 @@ import { connect } from "./riot-lcu/internal/lcu-websocket";
 import {
     onMatchFound,
     onHonorCompleted,
+    onDodgerQueueFinished,
     onEnteredChampionSelect,
     onPlayerBanAction,
     onPlayerPickChanged,
@@ -48,6 +49,8 @@ export async function startAutoScript() {
         const acceptData = await acceptReadyCheck();
         console.log("acceptMathc Data:", acceptData);
     });
+
+    onDodgerQueueFinished(startMatchmaking);
 
     onHonorCompleted(async function () {
         await wait(300);

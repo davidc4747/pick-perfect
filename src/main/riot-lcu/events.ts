@@ -18,6 +18,13 @@ export function onMatchFound(callback: (data: any) => void): void {
     );
 }
 
+export function onDodgerQueueFinished(callback: () => void): void {
+    // NOTE: if you get Dodge Penalty Muliple times in a row,
+    //      the error id will increment. so next time
+    //      it will be /errors/2 and this event won't trigger [DC]
+    onEvent("DELETE", "/lol-matchmaking/v1/search/errors/1", callback);
+}
+
 /* ======================== *\
     #Champion Select
 \* ======================== */
