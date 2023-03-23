@@ -1,7 +1,6 @@
-import React from "react";
 import styles from "./dashboard.module.css";
 import { ChampionSelectPhase } from "../../services/types";
-import { RoleSelections } from "../../services/userdata";
+import { RoleSelections } from "../../../shared/types";
 import SelectionView from "../../components/selection-view/selection-view";
 
 /* ===================== *\

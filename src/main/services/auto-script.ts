@@ -1,5 +1,5 @@
-import { ChampSelectSession, Action } from "../shared/types";
-import { connect } from "./riot-lcu/internal/lcu-websocket";
+import { ChampSelectSession, Action } from "../../shared/types";
+import { connect } from "../riot-lcu/internal/lcu-websocket";
 import {
     onMatchFound,
     onHonorCompleted,
@@ -10,7 +10,7 @@ import {
     onPlayerPickCompleted,
     onExitChampionSelect,
     onPlayerPickAction,
-} from "./riot-lcu/events";
+} from "../riot-lcu/events";
 import {
     getSession,
     openRankedLobby,
@@ -19,12 +19,12 @@ import {
     hoverChampion,
     banChampion,
     pickChampion,
-} from "./riot-lcu/requests";
+} from "../riot-lcu/requests";
 import {
     getMyPickAction,
     getMyAssignedPosition,
     getUnPickableChampions,
-} from "./riot-lcu/session-helpers";
+} from "../riot-lcu/session-helpers";
 import { getHoverList, getBanList, getPickList } from "./userconfig";
 
 /* ======================== *\

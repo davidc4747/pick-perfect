@@ -1,12 +1,14 @@
-import React, { useReducer } from "react";
+import { useReducer } from "react";
 import styles from "./app.module.css";
-import { Page, ChampionSelectPhase } from "../../services/types";
 import {
-    UserSelectionType,
-    UserSelections,
     DEFAULT_USER_CONFIG,
     userSelectionsReducer,
 } from "../../services/userdata";
+import {
+    UserSelections,
+    UserSelectionType,
+    ChampionSelectPhase,
+} from "../../../shared/types";
 // import Dashboard from "../../pages/dashboard/dashboard";
 import PositionSelector from "../position-selector/position-selector";
 import SelectionView from "../selection-view/selection-view";
@@ -15,6 +17,12 @@ import SelectChamp from "../../pages/select-champ/select-champ";
 /* ===================== *\
     # App
 \* ===================== */
+
+enum Page {
+    ViewUserSelections,
+    SelectChampion,
+    Settings,
+}
 
 interface AppState {
     currentPage: Page;
@@ -28,7 +36,7 @@ const initialState: AppState = {
     currentPage: Page.ViewUserSelections,
 
     selections: DEFAULT_USER_CONFIG,
-    curentUserSelection: "default",
+    curentUserSelection: "all",
     selectedPhase: null,
 };
 
@@ -219,7 +227,7 @@ export default function App() {
                             onDefaultClicked={() =>
                                 dispatch({
                                     type: AppActionType.ChangeUserSelectionType,
-                                    changeUserSelectionType: "default",
+                                    changeUserSelectionType: "all",
                                 })
                             }
                         />

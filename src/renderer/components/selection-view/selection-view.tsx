@@ -1,8 +1,10 @@
-import React from "react";
 import styles from "./selection-view.module.css";
 import { getChampionMap } from "../../services/championData";
-import { ChampionSelectPhase } from "../../services/types";
-import { UserSelections, UserSelectionType } from "../../services/userdata";
+import {
+    UserSelections,
+    UserSelectionType,
+    ChampionSelectPhase,
+} from "../../../shared/types";
 import CoverButton from "../cover-button/cover-button";
 import Droppable from "../dragdrop/droppable";
 import DragNDrop from "../dragdrop/dragndrop";
@@ -32,7 +34,7 @@ export default function SelectionView(props: PropTypes) {
         onDefaultClicked,
     } = props;
     const phaseSelection = selection[currentTab][phase];
-    const defaultSelection = selection["default"][phase];
+    const defaultSelection = selection["all"][phase];
     const champData = getChampionMap();
 
     return (
@@ -65,7 +67,7 @@ export default function SelectionView(props: PropTypes) {
                 ))}
 
                 {/* Default Selections */}
-                {currentTab !== "default" && defaultSelection.length > 0 && (
+                {currentTab !== "all" && defaultSelection.length > 0 && (
                     <li
                         data-testid={`champion-defaults`}
                         className={styles.default}

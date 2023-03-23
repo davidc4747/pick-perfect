@@ -1,70 +1,44 @@
-import { ChampionSelectPhase } from "./types";
-
-export interface UserSelections {
-    default: RoleSelections;
-    top: RoleSelections;
-    jungle: RoleSelections;
-    middle: RoleSelections;
-    utility: RoleSelections;
-    bottom: RoleSelections;
-}
-
-export interface RoleSelections {
-    ban: number[];
-    hover: number[];
-    pick: number[];
-    spells: number[];
-}
-
-export type UserSelectionType =
-    | "default"
-    | "top"
-    | "jungle"
-    | "middle"
-    | "utility"
-    | "bottom";
+import {
+    UserSelections,
+    UserSelectionType,
+    ChampionSelectPhase,
+} from "../../shared/types";
 
 export const DEFAULT_USER_CONFIG: UserSelections = {
-    default: {
+    all: {
         ban: [25, 99, 143], // Morgana, Lux, Zyra
         hover: [],
         pick: [],
-        spells: [],
     },
 
     top: {
         ban: [], // if ban is empty, use the generic BanList
         hover: [], // If hover is empty, use the PickList
         pick: [],
-        spells: [],
     },
 
     jungle: {
         ban: [],
         hover: [],
         pick: [56, 121],
-        spells: [],
     },
 
     middle: {
         ban: [],
         hover: [],
         pick: [],
-        spells: [],
     },
 
     bottom: {
         ban: [],
         hover: [],
         pick: [21, 22, 222], // MissForture, Ashe, Jinx
-        spells: [],
     },
 
     utility: {
         ban: [],
         hover: [235, 63], // Senna, Brand
         pick: [89, 111, 267], // Leo, Naut, Nami
-        spells: [],
     },
 };
 

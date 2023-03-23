@@ -1,7 +1,9 @@
-import React from "react";
 import styles from "./position-selector.module.css";
-import { AssignedPosition, ChampionSelectPhase } from "../../services/types";
-import { UserSelectionType } from "../../services/userdata";
+import {
+    AssignedPosition,
+    ChampionSelectPhase,
+    UserSelectionType,
+} from "../../../shared/types";
 import Droppable from "../dragdrop/droppable";
 import Icon from "../icon/icon";
 
@@ -66,8 +68,8 @@ export default function PositionSelector(props: PropTypes) {
                     type="radio"
                     name="position-rdo"
                     value={"default"}
-                    checked={"default" === position}
-                    onChange={() => onChange("default")}
+                    checked={"all" === position}
+                    onChange={() => onChange("all")}
                 />
                 <Icon className={styles.positionIcon} name="house-solid" />
             </label>

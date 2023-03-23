@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styles from "./select-champ.module.css";
 import { getChampionList } from "../../services/championData";
 import { ChampionData } from "../../services/championData";

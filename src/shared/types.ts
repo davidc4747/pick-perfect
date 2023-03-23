@@ -2,7 +2,15 @@
     #User Config
 \* ======================== */
 
-export interface UserConfig {
+export type UserSelectionType =
+    | "all"
+    | "top"
+    | "jungle"
+    | "middle"
+    | "utility"
+    | "bottom";
+
+export interface UserSelections {
     all: RoleSelections;
     top: RoleSelections;
     jungle: RoleSelections;
@@ -10,11 +18,13 @@ export interface UserConfig {
     utility: RoleSelections;
     bottom: RoleSelections;
 }
-interface RoleSelections {
-    bans: number[]; // if ban is empty, use the generic BanList
+export interface RoleSelections {
+    ban: number[]; // if ban is empty, use the generic BanList
     hover: number[]; // If hover is empty, use the PickList
-    picks: number[];
+    pick: number[];
 }
+
+export type ChampionSelectPhase = "ban" | "hover" | "pick";
 
 /* ======================== *\
     #Summoner
@@ -126,16 +136,17 @@ interface LobbyInvatation {
     #Champ Select
 \* ======================== */
 
-export type ChampSelectPhase = "PLANNING" | "BAN_PICK" | "FINALIZATION";
-
-export type AssignedPosition =
-    | "top"
-    | "jungle"
-    | "middle"
-    | "utility"
-    | "bottom";
+export type SessionPhase = "PLANNING" | "BAN_PICK" | "FINALIZATION";
 
 // type Phase = "hover" | "ban" | "pick";
+
+export enum AssignedPosition {
+    Top = "top",
+    Jungle = "jungle",
+    Middle = "middle",
+    Utility = "utility",
+    Bottom = "bottom",
+}
 
 export interface ChampSelectSession {
     actions: Action[][];
@@ -180,7 +191,7 @@ export interface ChampSelectSession {
         adjustedTimeLeftInPhase: number;
         internalNowInEpochMs: number;
         isInfinite: boolean;
-        phase: ChampSelectPhase;
+        phase: SessionPhase;
         totalTimeInPhase: number;
     };
 
