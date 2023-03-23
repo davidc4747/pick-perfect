@@ -1,4 +1,4 @@
-import { ChampSelectSession, Action } from "../../shared/types";
+import { ChampSelectSession, Action } from "../riot-lcu/types";
 import { connect } from "../riot-lcu/internal/lcu-websocket";
 import {
     onMatchFound,

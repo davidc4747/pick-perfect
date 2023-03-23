@@ -1,9 +1,5 @@
 import styles from "./position-selector.module.css";
-import {
-    AssignedPosition,
-    ChampionSelectPhase,
-    UserSelectionType,
-} from "../../../shared/types";
+import { ChampionSelectPhase, UserSelectionType } from "../../../shared/types";
 import Droppable from "../dragdrop/droppable";
 import Icon from "../icon/icon";
 
@@ -13,34 +9,34 @@ import Icon from "../icon/icon";
 
 interface PositionItem {
     displayName: string;
-    tag: AssignedPosition;
+    tag: UserSelectionType;
     image: string;
 }
 
 const positionList: PositionItem[] = [
     {
         displayName: "Top",
-        tag: AssignedPosition.Top,
+        tag: "top",
         image: "./position/top.png",
     },
     {
         displayName: "Jungle",
-        tag: AssignedPosition.Jungle,
+        tag: "jungle",
         image: "./position/jungle.png",
     },
     {
         displayName: "Middle",
-        tag: AssignedPosition.Middle,
+        tag: "middle",
         image: "./position/middle.png",
     },
     {
         displayName: "Utility",
-        tag: AssignedPosition.Utility,
+        tag: "utility",
         image: "./position/utility.png",
     },
     {
         displayName: "Bottom",
-        tag: AssignedPosition.Bottom,
+        tag: "bottom",
         image: "./position/bottom.png",
     },
 ];

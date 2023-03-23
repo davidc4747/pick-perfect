@@ -1,10 +1,5 @@
 import { sendRequest } from "./internal/lcu-https";
-import {
-    CurrentSummoner,
-    Lobby,
-    Action,
-    ChampSelectSession,
-} from "../../shared/types";
+import { CurrentSummoner, Lobby, Action, ChampSelectSession } from "./types";
 
 /* ======================== *\
     #Summoner

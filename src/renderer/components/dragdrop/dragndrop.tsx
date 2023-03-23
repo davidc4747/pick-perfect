@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import React, { ReactElement } from "react";
 import Draggable from "./draggable";
 import Droppable, { DropEffect } from "./droppable";
 

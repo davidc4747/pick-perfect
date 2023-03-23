@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import React, { ReactElement } from "react";
 import styles from "./cover-button.module.css";
 import Icon, { IconType } from "../icon/icon";
 

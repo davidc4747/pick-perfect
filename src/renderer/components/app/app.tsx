@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import React, { useReducer } from "react";
 import styles from "./app.module.css";
 import {
     DEFAULT_USER_CONFIG,

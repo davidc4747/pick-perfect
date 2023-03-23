@@ -1,8 +1,4 @@
-import {
-    Action,
-    AssignedPosition,
-    ChampSelectSession,
-} from "../../shared/types";
+import { Action, AssignedPosition, ChampSelectSession } from "./types";
 
 /* ======================== *\
     #Session Helpers
