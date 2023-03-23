@@ -1,5 +1,5 @@
 import { ChampSelectSession, Action } from "../riot-lcu/types";
-import { connect } from "../riot-lcu/internal/lcu-websocket";
+import { connect, disconnect } from "../riot-lcu/internal/lcu-websocket";
 import {
     onMatchFound,
     onHonorCompleted,
@@ -38,6 +38,10 @@ function wait(miliseconds: number): Promise<void> {
 /* ======================== *\
     #Start
 \* ======================== */
+
+export async function endAutoScript() {
+    await disconnect();
+}
 
 export async function startAutoScript() {
     await connect();

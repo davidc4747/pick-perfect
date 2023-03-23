@@ -59,8 +59,11 @@ export async function connect(): Promise<void> {
     });
 }
 
-export function disconnect() {
+export function disconnect(): Promise<void> {
     ws.close();
+    return new Promise(function (resolve) {
+        ws.on("close", resolve);
+    });
 }
 
 export function clearEvents() {

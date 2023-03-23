@@ -5,8 +5,7 @@
     "main": "dist/main.js",
     "targets": {
         "main": {
-            "source": "src/main/main.ts",
-            "context": "electron-main"
+            "source": "src/main/main.ts"
         },
         "renderer": {
             "source": "src/renderer/index.html",
