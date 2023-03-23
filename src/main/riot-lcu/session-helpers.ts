@@ -56,29 +56,6 @@ export function getMyAssignedPosition(
 
 export function getUnPickableChampions(session: ChampSelectSession): number[] {
     const { actions, localPlayerCellId } = session;
-    if (!actions) {
-        // TODO: DEBUGGING
-        console.log("ERRROR Incoming!!!!");
-        console.log("ERRROR Incoming!!!!");
-        console.log("ERRROR Incoming!!!!");
-        console.log("ERRROR Incoming!!!!");
-        console.log("ERRROR Incoming!!!!");
-        console.log("ERRROR Incoming!!!!");
-        console.log("ERRROR Incoming!!!!");
-        console.log("ERRROR Incoming!!!!");
-        console.log("ERRROR Incoming!!!!");
-        console.log("ERRROR Incoming!!!!");
-        console.log(session, actions);
-
-        // if the session is invalid, it should just return and empty array.
-        // But why is the Session invalid?
-        // That should never be the case. it should always have SOMETHING?
-        // Maybe sombody dodged, but the timer is still running? so when triggers but i'm not actually in champion select
-        // after the timer, check if we're still in match making?
-
-        // use setTimeout() and clear it if game is dodged.
-        // is there and event for game dodged? DELETE session maybe?
-    }
     const disabledChampions = actions
         .flat()
         .filter(

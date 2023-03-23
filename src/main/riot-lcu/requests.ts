@@ -53,11 +53,11 @@ export function startCustomLobby(): Promise<StartRespoonse> {
     return sendRequest("POST", "/lol-lobby/v1/lobby/custom/start-champ-select");
 }
 
-export function startMatchmaking(): Promise<""> {
+export function startMatchmaking(): Promise<void> {
     return sendRequest("POST", "/lol-lobby/v2/lobby/matchmaking/search");
 }
 
-export function acceptReadyCheck(): Promise<any> {
+export function acceptReadyCheck(): Promise<void> {
     return sendRequest("POST", "/lol-matchmaking/v1/ready-check/accept");
 }
 
@@ -71,11 +71,7 @@ export function declineReadyCheck(): Promise<any> {
 
 export async function getSession(): Promise<ChampSelectSession | undefined> {
     try {
-        const response = await sendRequest(
-            "GET",
-            `/lol-champ-select/v1/session`
-        );
-        return response.json();
+        return await sendRequest("GET", `/lol-champ-select/v1/session`);
     } catch (err) {
         console.error("Unable to fetch 'session'", err);
         return undefined;
@@ -105,7 +101,7 @@ export function getPickableChampions(): Promise<number[]> {
 export function hoverChampion(
     pickAction: Action,
     championId: number
-): Promise<any> {
+): Promise<ChampSelectSession> {
     return sendRequest(
         "PATCH",
         `/lol-champ-select/v1/session/actions/${pickAction.id}`,
@@ -119,7 +115,7 @@ export function hoverChampion(
 export function pickChampion(
     pickAction: Action,
     championId: number
-): Promise<any> {
+): Promise<ChampSelectSession> {
     return sendRequest(
         "PATCH",
         `/lol-champ-select/v1/session/actions/${pickAction.id}`,
@@ -134,7 +130,7 @@ export function pickChampion(
 export function banChampion(
     banAction: Action,
     championId: number
-): Promise<any> {
+): Promise<ChampSelectSession> {
     return sendRequest(
         "PATCH",
         `/lol-champ-select/v1/session/actions/${banAction.id}`,

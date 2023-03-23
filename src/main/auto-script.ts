@@ -43,13 +43,7 @@ export async function startAutoScript() {
     await connect();
     console.log("Running...");
 
-    onMatchFound(async function () {
-        // if you accept the request too fast, the animations don't play properly [DC]
-        await wait(100);
-        const acceptData = await acceptReadyCheck();
-        console.log("acceptMathc Data:", acceptData);
-    });
-
+    onMatchFound(acceptReadyCheck);
     onDodgerQueueFinished(startMatchmaking);
 
     onHonorCompleted(async function () {
@@ -68,7 +62,6 @@ export async function startAutoScript() {
     ): Promise<void> {
         console.log("---------------------");
         await wait(9350); // there's some animations playing, just wait for them to finish
-        console.log("Session:", session);
 
         const myRole = getMyAssignedPosition(session);
         const disabledChampions = getUnPickableChampions(session);
@@ -81,8 +74,7 @@ export async function startAutoScript() {
                 ) ?? 0;
 
             console.log("Hover: ", hoverID);
-            const hoverData = await hoverChampion(pickAction, hoverID);
-            console.log("hoverData: ", hoverData);
+            await hoverChampion(pickAction, hoverID);
         }
     });
 
@@ -110,8 +102,7 @@ export async function startAutoScript() {
                     ) ?? 0;
 
                 console.log("Ban:", banID);
-                const banData = await banChampion(banAction, banID);
-                console.log("banData:", banData);
+                await banChampion(banAction, banID);
             }
         }
     });
@@ -131,7 +122,7 @@ export async function startAutoScript() {
     ): Promise<void> {
         // If only a few seconds left. Lock-in something for them.
         timeout = setTimeout(
-            async () => await pickMyChampion(),
+            pickMyChampion,
             session.timer.adjustedTimeLeftInPhase - 3000
         );
     });
@@ -148,8 +139,7 @@ export async function startAutoScript() {
                     ) ?? 0;
 
                 console.log("Pick:", myRole, pickID);
-                const pickData = await pickChampion(updatedPickAction, pickID);
-                console.log("pickData:", pickData);
+                await pickChampion(updatedPickAction, pickID);
             }
         }
     }
