@@ -1,9 +1,9 @@
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import styles from "./app.module.css";
 import {
-    DEFAULT_USER_CONFIG,
-    userSelectionsReducer,
-} from "../../services/userdata";
+    INITIAL_USER_SELECTION,
+    selectionReducer,
+} from "../../services/selectionReducer";
 import {
     UserSelections,
     UserSelectionType,
@@ -13,6 +13,11 @@ import {
 import PositionSelector from "../position-selector/position-selector";
 import SelectionView from "../selection-view/selection-view";
 import SelectChamp from "../../pages/select-champ/select-champ";
+
+declare const electron: {
+    updateSelections: (data: UserSelections) => void;
+    getSelections: () => Promise<UserSelections>;
+};
 
 /* ===================== *\
     # App
@@ -35,7 +40,7 @@ interface AppState {
 const initialState: AppState = {
     currentPage: Page.ViewUserSelections,
 
-    selections: DEFAULT_USER_CONFIG,
+    selections: INITIAL_USER_SELECTION,
     curentUserSelection: "all",
     selectedPhase: null,
 };
@@ -87,7 +92,7 @@ function reducer(state: AppState, action: AppAction): AppState {
                     ...state,
 
                     // Update User Selection
-                    selections: userSelectionsReducer(state.selections, {
+                    selections: selectionReducer(state.selections, {
                         type: "change_order",
                         selectionType: state.curentUserSelection,
                         phase: action.selectedPhase,
@@ -105,7 +110,7 @@ function reducer(state: AppState, action: AppAction): AppState {
                     ...state,
 
                     // Update User Selection
-                    selections: userSelectionsReducer(state.selections, {
+                    selections: selectionReducer(state.selections, {
                         type: "remove",
                         selectionType: state.curentUserSelection,
                         phase: action.selectedPhase,
@@ -140,7 +145,7 @@ function reducer(state: AppState, action: AppAction): AppState {
                     selectedPhase: null,
 
                     // Update User Selection
-                    selections: userSelectionsReducer(state.selections, {
+                    selections: selectionReducer(state.selections, {
                         type: "add",
                         selectionType: state.curentUserSelection,
                         phase: state.selectedPhase,
@@ -162,6 +167,21 @@ function reducer(state: AppState, action: AppAction): AppState {
 
 export default function App() {
     const [state, dispatch] = useReducer(reducer, initialState);
+
+    // useEffect(
+    //     async function () {
+    //         // ..
+    //         // const userSelection = await electron.getSelections();
+    //     },
+    //     [state.curentUserSelection]
+    // );
+    useEffect(
+        function () {
+            electron.updateSelections(state.selections);
+            console.log("electron.updateSelections", electron);
+        },
+        [state.selections]
+    );
 
     function handleChampionSelected(championId: number) {
         dispatch({ type: AppActionType.ChampionSelected, championId });

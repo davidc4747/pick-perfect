@@ -1,6 +1,16 @@
 import path from "path";
-import { app, Tray, Menu, MenuItem, BrowserWindow } from "electron";
+import {
+    app,
+    ipcMain,
+    Tray,
+    Menu,
+    MenuItem,
+    BrowserWindow,
+    IpcMainEvent,
+} from "electron";
 import { startAutoScript, endAutoScript } from "./services/auto-script";
+import { UserSelections } from "../shared/types";
+import { updateSelections, getAllSelections } from "./services/userSelections";
 
 /* ======================== *\
     #App
@@ -8,7 +18,7 @@ import { startAutoScript, endAutoScript } from "./services/auto-script";
 
 let mainWindow: BrowserWindow;
 app.whenReady().then(async function () {
-    const appIcon = path.normalize("dist/champ-placeholder.png");
+    const appIcon = path.resolve("dist/champ-placeholder.png");
     mainWindow = createWindow(appIcon);
     await startAutoScript();
 
@@ -16,6 +26,17 @@ app.whenReady().then(async function () {
     tray.on("click", function name() {
         mainWindow.show();
     });
+});
+
+ipcMain.on(
+    "updateSelections",
+    function (event: IpcMainEvent, data: UserSelections) {
+        updateSelections(data);
+    }
+);
+
+ipcMain.handle("getSelections", function () {
+    return getAllSelections();
 });
 
 async function closeApp() {
@@ -35,11 +56,11 @@ function createWindow(iconPath: string): BrowserWindow {
         show: false,
         icon: iconPath,
         webPreferences: {
-            // preload: path.join(__dirname, "./settings/settingsPreload.js"),
+            preload: path.resolve("dist/preload.js"),
         },
     });
 
-    win.loadFile(path.normalize("dist/renderer/index.html"));
+    win.loadFile(path.resolve("dist/renderer/index.html"));
     win.removeMenu();
     win.webContents.openDevTools();
     win.once("ready-to-show", () => {

@@ -1,6 +1,8 @@
-import { AssignedPosition, UserSelections } from "../../shared/types";
+import { UserSelections } from "../../shared/types";
+import { AssignedPosition } from "../riot-lcu/types";
+AssignedPosition;
 
-const USER_CONFIG: UserSelections = {
+let userSelection: UserSelections = {
     all: {
         ban: [25, 99, 143], // Morgana, Lux, Zyra
         hover: [],
@@ -43,16 +45,24 @@ const USER_CONFIG: UserSelections = {
 \* ======================== */
 
 export function getHoverList(role: AssignedPosition): number[] {
-    return USER_CONFIG[role].hover
-        .concat(USER_CONFIG.all.hover)
-        .concat(USER_CONFIG[role].pick)
-        .concat(USER_CONFIG.all.pick);
+    return userSelection[role].hover
+        .concat(userSelection.all.hover)
+        .concat(userSelection[role].pick)
+        .concat(userSelection.all.pick);
 }
 
 export function getBanList(role: AssignedPosition): number[] {
-    return USER_CONFIG[role].ban.concat(USER_CONFIG.all.ban);
+    return userSelection[role].ban.concat(userSelection.all.ban);
 }
 
 export function getPickList(role: AssignedPosition): number[] {
-    return USER_CONFIG[role].pick.concat(USER_CONFIG.all.pick);
+    return userSelection[role].pick.concat(userSelection.all.pick);
+}
+
+export function getAllSelections(): UserSelections {
+    return userSelection;
+}
+
+export function updateSelections(newUserSelection: UserSelections) {
+    userSelection = newUserSelection;
 }

@@ -4,23 +4,23 @@ import {
     ChampionSelectPhase,
 } from "../../shared/types";
 
-export const DEFAULT_USER_CONFIG: UserSelections = {
+export const INITIAL_USER_SELECTION: UserSelections = {
     all: {
-        ban: [25, 99, 143], // Morgana, Lux, Zyra
+        ban: [],
         hover: [],
         pick: [],
     },
 
     top: {
-        ban: [], // if ban is empty, use the generic BanList
-        hover: [], // If hover is empty, use the PickList
+        ban: [],
+        hover: [],
         pick: [],
     },
 
     jungle: {
         ban: [],
         hover: [],
-        pick: [56, 121],
+        pick: [],
     },
 
     middle: {
@@ -32,13 +32,13 @@ export const DEFAULT_USER_CONFIG: UserSelections = {
     bottom: {
         ban: [],
         hover: [],
-        pick: [21, 22, 222], // MissForture, Ashe, Jinx
+        pick: [],
     },
 
     utility: {
         ban: [],
-        hover: [235, 63], // Senna, Brand
-        pick: [89, 111, 267], // Leo, Naut, Nami
+        hover: [],
+        pick: [],
     },
 };
 
@@ -51,7 +51,7 @@ interface UserSelectionAction {
     newIndex?: number;
 }
 
-export function userSelectionsReducer(
+export function selectionReducer(
     selections: UserSelections,
     action: UserSelectionAction
 ): UserSelections {

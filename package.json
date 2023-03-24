@@ -7,6 +7,11 @@
         "main": {
             "source": "src/main/main.ts"
         },
+        "preload": {
+            "source": "src/main/preload.ts",
+            "context": "electron-renderer",
+            "isLibrary": true
+        },
         "renderer": {
             "source": "src/renderer/index.html",
             "distDir": "dist/renderer/",
