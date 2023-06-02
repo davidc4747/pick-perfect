@@ -45,17 +45,33 @@ const initialState: AppState = {
     selectedPhase: null,
 };
 
-interface AppAction {
-    type: AppActionType;
-    changePage?: Page;
-
-    selections?: UserSelections;
-    changeUserSelectionType?: UserSelectionType;
-    selectedPhase?: ChampionSelectPhase;
-    championId?: number;
-    oldIndex?: number;
-    newIndex?: number;
+type AppAction =
+    | { type: AppActionType.ChangePage; page: Page }
+    | {
+          type: AppActionType.ChangeUserSelectionType;
+          changeUserSelectionType: UserSelectionType;
 }
+    | {
+          type: AppActionType.InitializeSelection;
+          selections: UserSelections;
+      }
+    | {
+          type: AppActionType.SortChampion;
+          phase: ChampionSelectPhase;
+          oldIndex: number;
+          newIndex: number;
+      }
+    | {
+          type: AppActionType.RemoveChampion;
+          phase: ChampionSelectPhase;
+          championId: number;
+      }
+    | {
+          type: AppActionType.StartChampionSelect;
+          phase: ChampionSelectPhase;
+      }
+    | { type: AppActionType.ChampionSelected; championId: number }
+    | { type: AppActionType.CancelChampionSelect };
 
 enum AppActionType {
     ChangePage = "CHANGE_PAGE",
@@ -74,7 +90,7 @@ function reducer(state: AppState, action: AppAction): AppState {
         case AppActionType.ChangePage:
             return {
                 ...state,
-                currentPage: action.changePage ?? state.currentPage,
+                currentPage: action.page ?? state.currentPage,
             };
         case AppActionType.ChangeUserSelectionType:
             return {
@@ -84,71 +100,50 @@ function reducer(state: AppState, action: AppAction): AppState {
             };
 
         case AppActionType.InitializeSelection:
-            if (action.selections) {
                 return {
                     ...state,
                     selections: action.selections,
                 };
-            } else {
-                return state; // invalid action, don't do anything.
-            }
 
         case AppActionType.SortChampion:
-            if (
-                action.selectedPhase &&
-                // NOTE: I specifically check for undefined here cuz 'oldIndex' could be 0 [DC]
-                action.oldIndex !== undefined &&
-                action.newIndex !== undefined
-            ) {
                 return {
                     ...state,
 
                     // Update User Selection
                     selections: selectionReducer(state.selections, {
-                        type: "change_order",
+                    type: "CHANGE_ORDER",
                         selectionType: state.curentUserSelection,
-                        phase: action.selectedPhase,
+                    phase: action.phase,
                         oldIndex: action.oldIndex,
                         newIndex: action.newIndex,
                     }),
                 };
-            } else {
-                return state; // invalid action, don't do anything.
-            }
 
         case AppActionType.RemoveChampion:
-            if (action.selectedPhase && action.championId) {
                 return {
                     ...state,
 
                     // Update User Selection
                     selections: selectionReducer(state.selections, {
-                        type: "remove",
+                    type: "REMOVE",
                         selectionType: state.curentUserSelection,
-                        phase: action.selectedPhase,
+                    phase: action.phase,
                         championId: action.championId,
                     }),
                 };
-            } else {
-                return state; // invalid action, don't do anything.
-            }
 
         case AppActionType.StartChampionSelect:
-            if (action.selectedPhase) {
                 return {
                     ...state,
                     // Switch the Page
                     currentPage: Page.SelectChampion,
 
                     // Setup the selectedPhase
-                    selectedPhase: action.selectedPhase,
+                selectedPhase: action.phase,
                 };
-            } else {
-                return state; // invalid action, don't do anything.
-            }
 
         case AppActionType.ChampionSelected:
-            if (state.selectedPhase && action.championId) {
+            if (state.selectedPhase) {
                 return {
                     ...state,
 
@@ -158,14 +153,14 @@ function reducer(state: AppState, action: AppAction): AppState {
 
                     // Update User Selection
                     selections: selectionReducer(state.selections, {
-                        type: "add",
+                        type: "ADD",
                         selectionType: state.curentUserSelection,
                         phase: state.selectedPhase,
                         championId: action.championId,
                     }),
                 };
             } else {
-                return state; // invalid action, don't do anything.
+                return { ...state }; // Invalid state, Do nothing
             }
 
         case AppActionType.CancelChampionSelect:

@@ -42,22 +42,34 @@ export const INITIAL_USER_SELECTION: UserSelections = {
     },
 };
 
-interface UserSelectionAction {
-    type: "add" | "change_order" | "remove";
-    selectionType: UserSelectionType;
-    phase: ChampionSelectPhase;
-    championId?: number;
-    oldIndex?: number;
-    newIndex?: number;
-}
+type UserSelectionAction =
+    | {
+          type: "ADD";
+          selectionType: UserSelectionType;
+          phase: ChampionSelectPhase;
+          championId: number;
+      }
+    | {
+          type: "CHANGE_ORDER";
+          selectionType: UserSelectionType;
+          phase: ChampionSelectPhase;
+          oldIndex: number;
+          newIndex: number;
+      }
+    | {
+          type: "REMOVE";
+          selectionType: UserSelectionType;
+          phase: ChampionSelectPhase;
+          championId: number;
+      };
 
 export function selectionReducer(
     selections: UserSelections,
     action: UserSelectionAction
 ): UserSelections {
-    const { selectionType, phase, championId, oldIndex, newIndex } = action;
     switch (action.type) {
-        case "add":
+        case "ADD": {
+            const { selectionType, phase, championId } = action;
             // Only add Unique Values
             if (!selections[selectionType][phase]?.includes(championId ?? -1)) {
                 return {
@@ -73,7 +85,10 @@ export function selectionReducer(
             } else {
                 return selections; // Do Nothing
             }
-        case "remove":
+        }
+
+        case "REMOVE": {
+            const { selectionType, phase, championId } = action;
             return {
                 ...selections,
                 [selectionType]: {
@@ -83,27 +98,27 @@ export function selectionReducer(
                     ),
                 },
             };
-        case "change_order": {
-            // NOTE: I specifically check for undefined here cuz 'oldIndex' could be 0 [DC]
-            if (oldIndex !== undefined && newIndex !== undefined) {
-                const phaseSelections = selections[selectionType][phase];
+        }
 
-                phaseSelections.splice(newIndex, 0, phaseSelections[oldIndex]);
-                phaseSelections.splice(
-                    newIndex > oldIndex ? oldIndex : oldIndex + 1,
-                    1
-                );
+        case "CHANGE_ORDER": {
+            const { selectionType, phase, oldIndex, newIndex } = action;
+            const phaseSelections = selections[selectionType][phase];
 
-                return {
-                    ...selections,
-                    [selectionType]: {
-                        ...selections[selectionType],
-                        [phase]: phaseSelections,
-                    },
-                };
-            } else {
-                return { ...selections }; // invalid Action, do nothing
-            }
+            // Insert at it's new Positon
+            phaseSelections.splice(newIndex, 0, phaseSelections[oldIndex]);
+            // Remove from it's old Position
+            phaseSelections.splice(
+                newIndex > oldIndex ? oldIndex : oldIndex + 1,
+                1
+            );
+
+            return {
+                ...selections,
+                [selectionType]: {
+                    ...selections[selectionType],
+                    [phase]: phaseSelections,
+                },
+            };
         }
     }
 }
