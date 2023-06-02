@@ -121,7 +121,7 @@ export async function startAutoScript() {
     onPlayerPickCompleted(() => clearTimeout(timeout));
     onExitChampionSelect(() => clearTimeout(timeout));
     onPlayerPickAction(async function (
-        pickAction: Action,
+        _: Action,
         session: ChampSelectSession
     ): Promise<void> {
         // If only a few seconds left. Lock-in something for them.

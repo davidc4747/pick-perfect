@@ -28,6 +28,15 @@ app.whenReady().then(async function () {
     });
 });
 
+async function closeApp() {
+    await endAutoScript();
+    app.exit();
+}
+
+/* ------------------------- *\
+    #Events
+\* ------------------------- */
+
 ipcMain.on(
     "updateSelections",
     function (event: IpcMainEvent, data: UserSelections) {
@@ -38,11 +47,6 @@ ipcMain.on(
 ipcMain.handle("getSelections", function () {
     return getAllSelections();
 });
-
-async function closeApp() {
-    await endAutoScript();
-    app.exit();
-}
 
 /* ======================== *\
     #Window
@@ -56,13 +60,13 @@ function createWindow(iconPath: string): BrowserWindow {
         show: false,
         icon: iconPath,
         webPreferences: {
-            preload: path.resolve("dist/preload.js"),
+            preload: path.resolve("dist/preload/preload.js"),
         },
     });
 
     win.loadFile(path.resolve("dist/renderer/index.html"));
     win.removeMenu();
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
     win.once("ready-to-show", () => {
         win.show();
     });

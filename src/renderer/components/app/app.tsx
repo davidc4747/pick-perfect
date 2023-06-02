@@ -49,6 +49,7 @@ interface AppAction {
     type: AppActionType;
     changePage?: Page;
 
+    selections?: UserSelections;
     changeUserSelectionType?: UserSelectionType;
     selectedPhase?: ChampionSelectPhase;
     championId?: number;
@@ -60,6 +61,7 @@ enum AppActionType {
     ChangePage = "CHANGE_PAGE",
     ChangeUserSelectionType = "CHANGE_USER_SELECTION_TYPE",
 
+    InitializeSelection = "INITIALIZE_SELECTIONS",
     StartChampionSelect = "START_CHAMPION_SELECT",
     ChampionSelected = "CHAMPION_SELECTED",
     CancelChampionSelect = "CANCEL_CHAMPION_SELECT",
@@ -80,6 +82,16 @@ function reducer(state: AppState, action: AppAction): AppState {
                 curentUserSelection:
                     action.changeUserSelectionType ?? state.curentUserSelection,
             };
+
+        case AppActionType.InitializeSelection:
+            if (action.selections) {
+                return {
+                    ...state,
+                    selections: action.selections,
+                };
+            } else {
+                return state; // invalid action, don't do anything.
+            }
 
         case AppActionType.SortChampion:
             if (
@@ -168,17 +180,17 @@ function reducer(state: AppState, action: AppAction): AppState {
 export default function App() {
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    // useEffect(
-    //     async function () {
-    //         // ..
-    //         // const userSelection = await electron.getSelections();
-    //     },
-    //     [state.curentUserSelection]
-    // );
+    useEffect(function () {
+        electron.getSelections().then(function (userSelection: UserSelections) {
+            dispatch({
+                type: AppActionType.InitializeSelection,
+                selections: userSelection,
+            });
+        });
+    }, []);
     useEffect(
         function () {
             electron.updateSelections(state.selections);
-            console.log("electron.updateSelections", electron);
         },
         [state.selections]
     );

@@ -1,15 +1,15 @@
 describe("One Trick", () => {
-    // const homepage = "http://127.0.0.1:5173";
-    const homepage = "dist/renderer/index.html";
+    beforeEach(function () {
+        // const homepage = "http://127.0.0.1:5173";
+        const homepage = "dist/renderer/index.html";
+        cy.visit(homepage);
+    });
 
     it("Should Display Default selection on load", function () {
-        cy.visit(homepage);
         cy.getByTestId("position-default").find(">input").should("be.checked");
     });
 
     it("Should display slections based on Role", function () {
-        cy.visit(homepage);
-
         // Add to junlge
         cy.getByTestId("position-top").click();
         cy.contains("Add Champion").click();
@@ -33,16 +33,12 @@ describe("One Trick", () => {
     \* ======================== */
 
     it("Should Add a new Champion to Selections", () => {
-        cy.visit(homepage);
-
         cy.contains("Add Champion").click();
         cy.getByTestId("add-champion-1").click();
         cy.getByTestId("champion-1").should("exist");
     });
 
     it("Should NOT display repeat champions", function () {
-        cy.visit(homepage);
-
         // Add Multiple of the Same Champion
         cy.contains("Add Champion").click();
         cy.getByTestId("add-champion-1").click();
@@ -58,8 +54,6 @@ describe("One Trick", () => {
     });
 
     it("Should display champions under the correct role", () => {
-        cy.visit(homepage);
-
         // Append to jungle selections
         cy.getByTestId("position-jungle").click();
         cy.contains("Add Champion").click();
@@ -75,8 +69,6 @@ describe("One Trick", () => {
     });
 
     it("Should return back to Orginal Page after selecting a Champion", function () {
-        cy.visit(homepage);
-
         cy.getByTestId("position-middle").click();
         cy.contains("Add Champion").click();
         cy.getByTestId("add-champion-1").click();
@@ -90,7 +82,6 @@ describe("One Trick", () => {
     \* ======================== */
 
     it("Should allow the user to remove an champion from the list", function () {
-        cy.visit(homepage);
         cy.getByTestId("position-middle").click();
         cy.contains("Add Champion").click();
         cy.getByTestId("add-champion-9").click();
@@ -99,7 +90,6 @@ describe("One Trick", () => {
     });
 
     it("Should only remove one champion at a time", function () {
-        cy.visit(homepage);
         cy.getByTestId("position-middle").click();
 
         // add a Bunch to the list
@@ -117,7 +107,6 @@ describe("One Trick", () => {
     });
 
     it.skip("Should allow user to reorder champions in the list", function () {
-        cy.visit(homepage);
         cy.getByTestId("position-middle").click();
 
         // add a Bunch to the list
@@ -143,14 +132,12 @@ describe("One Trick", () => {
     \* ======================== */
 
     it("Should allow use to go back without selecting a champion", function () {
-        cy.visit(homepage);
         cy.contains("Add Champion").click();
         cy.getByTestId("btn-cancel").click();
         cy.getByTestId("selections-pick").children().should("have.lengthOf", 1);
     });
 
     it("Should display default selection in each role", function () {
-        cy.visit(homepage);
         cy.contains("Add Champion").click();
         cy.getByTestId("add-champion-9").click();
         cy.getByTestId("position-middle").click();
@@ -158,7 +145,6 @@ describe("One Trick", () => {
     });
 
     it("Should allow the user to go to default selection through one of those items", function () {
-        cy.visit(homepage);
         cy.contains("Add Champion").click();
         cy.getByTestId("add-champion-9").click();
         cy.getByTestId("position-middle").click();
@@ -167,7 +153,6 @@ describe("One Trick", () => {
     });
 
     it("Should allow users to go to the Settings Page", function () {
-        cy.visit(homepage);
         cy.getByTestId("btn-settings").click();
         cy.contains("Settings").should("exist");
     });
