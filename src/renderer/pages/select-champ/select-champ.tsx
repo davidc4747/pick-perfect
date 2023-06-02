@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import styles from "./select-champ.module.css";
+import {
+    cancelButton,
+    searchbar,
+    searchbarInput,
+    searchbarClear,
+    champList,
+    championItem,
+} from "./select-champ.module.css";
 import { getChampionList } from "../../services/championData";
 import { ChampionData } from "../../services/championData";
 import CoverButton from "../../components/cover-button/cover-button";
@@ -9,8 +16,8 @@ import CoverButton from "../../components/cover-button/cover-button";
 \* ===================== */
 
 interface PropTypes {
-    onChampionSelected: (id: number) => void;
-    onCancel: () => void;
+    onChampionSelected(id: number): void;
+    onCancel(): void;
 }
 
 export default function SelectChamp(props: PropTypes) {
@@ -26,29 +33,29 @@ export default function SelectChamp(props: PropTypes) {
         <>
             <button
                 data-testid="btn-cancel"
-                className={styles.cancelButton}
+                className={cancelButton}
                 onClick={onCancel}
             >
                 Cancel
             </button>
 
-            <section className={styles.searchbar}>
+            <section className={searchbar}>
                 <input
                     type="text"
                     placeholder="Search"
-                    className={styles.searchbarInput}
+                    className={searchbarInput}
                     value={searchString}
                     onChange={(e) => setSearchString(e.target.value)}
                 />
                 <button
-                    className={styles.searchbarClear}
+                    className={searchbarClear}
                     onClick={() => setSearchString("")}
                 >
                     X
                 </button>
             </section>
 
-            <ul className={styles.champList}>
+            <ul className={champList}>
                 {fullChampionList
                     .filter((champ) =>
                         searchString
@@ -58,7 +65,7 @@ export default function SelectChamp(props: PropTypes) {
                             : true
                     )
                     .map((champ) => (
-                        <li className={styles.championItem} key={champ.id}>
+                        <li className={championItem} key={champ.id}>
                             <img
                                 src={champ.image}
                                 title={champ.name}

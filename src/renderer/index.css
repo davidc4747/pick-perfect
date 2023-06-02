@@ -3,6 +3,8 @@
 \* ======================== */
 
 :root {
+    --icon-size: 100px;
+
     /* Colors */
     --gold: #785a28;
     --black: #09141b;
@@ -81,12 +83,15 @@ button {
 
     color: var(--textColor);
     background-color: var(--secondaryColor);
-    border: 1px solid var(--primaryColor);
+    border: 1px solid var(--secondaryColor);
 
     transition: 0.25s ease-out color;
 }
-button:hover {
+button:hover,
+button:focus {
     color: var(--white);
+    border: 1px solid var(--primaryColor);
+    outline: none;
 }
 
 /* ------------------------- *\

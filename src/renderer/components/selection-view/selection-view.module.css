@@ -30,12 +30,12 @@
     filter: grayscale(80%);
 }
 .selectionItemDragOver {
-    padding-left: 120px;
+    padding-left: var(--icon-size);
 }
 
 .selectionItem > img {
-    width: 120px;
-    height: 120px;
+    width: var(--icon-size);
+    height: var(--icon-size);
     background-color: var(--secondaryColor);
 }
 
@@ -52,8 +52,8 @@
     flex-flow: row wrap;
     align-items: flex-start;
 
-    width: 120px;
-    height: 120px;
+    width: var(--icon-size);
+    height: var(--icon-size);
     background-color: var(--secondaryColor);
 
     cursor: pointer;
@@ -70,8 +70,8 @@
 \* ======================== */
 
 .addButton {
-    width: 120px;
-    height: 120px;
+    width: var(--icon-size);
+    height: var(--icon-size);
 
     cursor: pointer;
     transition: 0.15s ease-out transform, 0.15s ease-out border,

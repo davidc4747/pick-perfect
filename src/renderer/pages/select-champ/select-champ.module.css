@@ -2,9 +2,12 @@
     # Header Section
 \* ===================== */
 
+.cancelButton {
+    margin: 0.8rem 0;
+}
+
 .searchbar {
     display: flex;
-    margin-top: 0.8rem;
 }
 .searchbarInput {
     flex-grow: 1;
@@ -23,16 +26,18 @@
     padding: 1rem 0;
 
     display: grid;
-    grid-template-columns: repeat(auto-fit, 120px);
-    gap: 0.6rem;
+    grid-template-columns: repeat(auto-fill, var(--icon-size));
+    justify-content: space-between;
+    gap: 0.4rem;
 }
 
 .championItem > img {
     /* Without this the .champItem has an extra 4px on the bottom and idk why */
     display: block;
 
-    min-width: 120px;
-    min-height: 120px;
+    max-width: var(--icon-size);
+    min-width: var(--icon-size);
+    min-height: var(--icon-size);
     background-color: var(--secondaryColor);
 }
 

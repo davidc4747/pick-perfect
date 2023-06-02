@@ -50,6 +50,15 @@ export default function ViewUserSelections(
 
             <SelectionView
                 currentTab={currentTab}
+                phase="pick"
+                selection={selections}
+                onAddChampion={startChampionSelection}
+                onMoveChampion={moveChampion}
+                onRemoveChampion={onRemoveChampion}
+                viewAllTab={viewAllTab}
+            />
+            <SelectionView
+                currentTab={currentTab}
                 phase="ban"
                 selection={selections}
                 onAddChampion={startChampionSelection}
@@ -60,15 +69,6 @@ export default function ViewUserSelections(
             <SelectionView
                 currentTab={currentTab}
                 phase="hover"
-                selection={selections}
-                onAddChampion={startChampionSelection}
-                onMoveChampion={moveChampion}
-                onRemoveChampion={onRemoveChampion}
-                viewAllTab={viewAllTab}
-            />
-            <SelectionView
-                currentTab={currentTab}
-                phase="pick"
                 selection={selections}
                 onAddChampion={startChampionSelection}
                 onMoveChampion={moveChampion}
