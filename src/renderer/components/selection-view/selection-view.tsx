@@ -17,10 +17,14 @@ interface PropTypes {
     currentTab: UserSelectionType;
     phase: ChampionSelectPhase;
     selection: UserSelections;
-    onAddChampion: (type: ChampionSelectPhase) => void;
-    onRemoveChampion: (championId: number, phase: ChampionSelectPhase) => void;
-    onMoveChampion: (oldIndex: number, newIndex: number) => void;
-    onDefaultClicked: () => void;
+    onAddChampion(type: ChampionSelectPhase): void;
+    onRemoveChampion(phase: ChampionSelectPhase, championId: number): void;
+    onMoveChampion(
+        phase: ChampionSelectPhase,
+        oldIndex: number,
+        newIndex: number
+    ): void;
+    viewAllTab(): void;
 }
 
 export default function SelectionView(props: PropTypes) {
@@ -31,7 +35,7 @@ export default function SelectionView(props: PropTypes) {
         onAddChampion,
         onRemoveChampion,
         onMoveChampion,
-        onDefaultClicked,
+        viewAllTab,
     } = props;
     const phaseSelection = selection[currentTab][phase];
     const defaultSelection = selection["all"][phase];
@@ -50,12 +54,14 @@ export default function SelectionView(props: PropTypes) {
                         data={{ index, championId: id, phase }}
                         dragStartClass={styles.selectionItemDragStart}
                         dragOverClass={styles.selectionItemDragOver}
-                        onDrop={(data) => onMoveChampion(data.index, index)}
+                        onDrop={(data) =>
+                            onMoveChampion(phase, data.index, index)
+                        }
                     >
                         <li
                             data-testid={`champion-${id}`}
                             className={styles.selectionItem}
-                            onContextMenu={() => onRemoveChampion(id, phase)}
+                            onContextMenu={() => onRemoveChampion(phase, id)}
                         >
                             <img
                                 title={champData.get(id)?.name}
@@ -82,7 +88,7 @@ export default function SelectionView(props: PropTypes) {
                         ))}
                         <CoverButton
                             text="Show Your Defaults"
-                            onClick={onDefaultClicked}
+                            onClick={viewAllTab}
                         />
                     </li>
                 )}
@@ -90,6 +96,7 @@ export default function SelectionView(props: PropTypes) {
                     dragOverClass={styles.selectionItemDragOver}
                     onDrop={(data) =>
                         onMoveChampion(
+                            phase,
                             data.index,
                             phaseSelection.length + 1 - 1
                         )

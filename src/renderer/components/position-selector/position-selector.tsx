@@ -43,9 +43,9 @@ const positionList: PositionItem[] = [
 
 interface PropTypes {
     position: UserSelectionType;
-    onChange: (selectionType: UserSelectionType) => void;
-    onSettingsOpened: () => void;
-    onRemoveChampion: (championId: number, phase: ChampionSelectPhase) => void;
+    onChange(selectionType: UserSelectionType): void;
+    onSettingsOpened(): void;
+    onRemoveChampion(phase: ChampionSelectPhase, championId: number): void;
 }
 
 export default function PositionSelector(props: PropTypes) {
@@ -99,7 +99,7 @@ export default function PositionSelector(props: PropTypes) {
                     dropEffect="move"
                     dragOverClass={styles.trashOver}
                     onDrop={(data) =>
-                        onRemoveChampion(data.championId, data.phase)
+                        onRemoveChampion(data.phase, data.championId)
                     }
                 >
                     <div>

@@ -10,8 +10,7 @@ import {
     ChampionSelectPhase,
 } from "../../../shared/types";
 // import Dashboard from "../../pages/dashboard/dashboard";
-import PositionSelector from "../position-selector/position-selector";
-import SelectionView from "../selection-view/selection-view";
+import ViewUserSelections from "../view-user-selections/view-user-selections";
 import SelectChamp from "../../pages/select-champ/select-champ";
 
 declare const electron: {
@@ -50,7 +49,7 @@ type AppAction =
     | {
           type: AppActionType.ChangeUserSelectionType;
           changeUserSelectionType: UserSelectionType;
-}
+      }
     | {
           type: AppActionType.InitializeSelection;
           selections: UserSelections;
@@ -100,47 +99,47 @@ function reducer(state: AppState, action: AppAction): AppState {
             };
 
         case AppActionType.InitializeSelection:
-                return {
-                    ...state,
-                    selections: action.selections,
-                };
+            return {
+                ...state,
+                selections: action.selections,
+            };
 
         case AppActionType.SortChampion:
-                return {
-                    ...state,
+            return {
+                ...state,
 
-                    // Update User Selection
-                    selections: selectionReducer(state.selections, {
+                // Update User Selection
+                selections: selectionReducer(state.selections, {
                     type: "CHANGE_ORDER",
-                        selectionType: state.curentUserSelection,
+                    selectionType: state.curentUserSelection,
                     phase: action.phase,
-                        oldIndex: action.oldIndex,
-                        newIndex: action.newIndex,
-                    }),
-                };
+                    oldIndex: action.oldIndex,
+                    newIndex: action.newIndex,
+                }),
+            };
 
         case AppActionType.RemoveChampion:
-                return {
-                    ...state,
+            return {
+                ...state,
 
-                    // Update User Selection
-                    selections: selectionReducer(state.selections, {
+                // Update User Selection
+                selections: selectionReducer(state.selections, {
                     type: "REMOVE",
-                        selectionType: state.curentUserSelection,
+                    selectionType: state.curentUserSelection,
                     phase: action.phase,
-                        championId: action.championId,
-                    }),
-                };
+                    championId: action.championId,
+                }),
+            };
 
         case AppActionType.StartChampionSelect:
-                return {
-                    ...state,
-                    // Switch the Page
-                    currentPage: Page.SelectChampion,
+            return {
+                ...state,
+                // Switch the Page
+                currentPage: Page.SelectChampion,
 
-                    // Setup the selectedPhase
+                // Setup the selectedPhase
                 selectedPhase: action.phase,
-                };
+            };
 
         case AppActionType.ChampionSelected:
             if (state.selectedPhase) {
@@ -190,7 +189,39 @@ export default function App() {
         [state.selections]
     );
 
-    function handleChampionSelected(championId: number) {
+    /* ------------------------- *\
+        #Bind Actions
+    \* ------------------------- */
+
+    function removeChampion(phase: ChampionSelectPhase, championId: number) {
+        dispatch({
+            type: AppActionType.RemoveChampion,
+            phase: phase,
+            championId,
+        });
+    }
+
+    function moveChampion(
+        phase: ChampionSelectPhase,
+        oldIndex: number,
+        newIndex: number
+    ) {
+        dispatch({
+            type: AppActionType.SortChampion,
+            phase: phase,
+            oldIndex,
+            newIndex,
+        });
+    }
+
+    function startChampionSelection(phase: ChampionSelectPhase) {
+        dispatch({
+            type: AppActionType.StartChampionSelect,
+            phase,
+        });
+    }
+
+    function championSelected(championId: number) {
         dispatch({ type: AppActionType.ChampionSelected, championId });
     }
 
@@ -198,91 +229,39 @@ export default function App() {
         dispatch({ type: AppActionType.CancelChampionSelect });
     }
 
+    /* ------------------------- *\
+        #Render
+    \* ------------------------- */
+
     function renderSelectedPage() {
         switch (state.currentPage) {
             case Page.ViewUserSelections:
                 return (
-                    <>
-                        <PositionSelector
-                            position={state.curentUserSelection}
-                            onChange={(selectionType: UserSelectionType) =>
-                                dispatch({
-                                    type: AppActionType.ChangeUserSelectionType,
-                                    changeUserSelectionType: selectionType,
-                                })
-                            }
-                            onSettingsOpened={() =>
-                                dispatch({
-                                    type: AppActionType.ChangePage,
-                                    changePage: Page.Settings,
-                                })
-                            }
-                            onRemoveChampion={(championId, phase) =>
-                                dispatch({
-                                    type: AppActionType.RemoveChampion,
-                                    selectedPhase: phase,
-                                    championId,
-                                })
-                            }
-                        />
-
-                        <SelectionView
-                            currentTab={state.curentUserSelection}
-                            phase="pick"
-                            selection={state.selections}
-                            onAddChampion={(selectedPhase) => {
-                                dispatch({
-                                    type: AppActionType.StartChampionSelect,
-                                    selectedPhase,
-                                });
-                            }}
-                            onMoveChampion={(oldIndex, newIndex) =>
-                                dispatch({
-                                    type: AppActionType.SortChampion,
-                                    selectedPhase: "pick",
-                                    oldIndex,
-                                    newIndex,
-                                })
-                            }
-                            onRemoveChampion={(championId, phase) =>
-                                dispatch({
-                                    type: AppActionType.RemoveChampion,
-                                    selectedPhase: phase,
-                                    championId,
-                                })
-                            }
-                            onDefaultClicked={() =>
-                                dispatch({
-                                    type: AppActionType.ChangeUserSelectionType,
-                                    changeUserSelectionType: "all",
-                                })
-                            }
-                        />
-                        {/* <SelectionView
-                            currentTab={state.curentUserSelection}
-                            phase="ban"
-                            selection={state.selections}
-                            onAdd={startChampionRequest}
-                        /> */}
-                        {/* <SelectionView
-                            currentTab={state.curentUserSelection}
-                            phase="hover"
-                            selection={state.selections}
-                            onAdd={startChampionRequest}
-                        />
-                        <SelectionView
-                            currentTab={state.curentUserSelection}
-                            phase="pick"
-                            selection={state.selections}
-                            onAdd={startChampionRequest}
-                        /> */}
-                    </>
+                    <ViewUserSelections
+                        currentTab={state.curentUserSelection}
+                        selections={state.selections}
+                        onTabChange={(tab: UserSelectionType) =>
+                            dispatch({
+                                type: AppActionType.ChangeUserSelectionType,
+                                changeUserSelectionType: tab,
+                            })
+                        }
+                        onSettingsOpened={() =>
+                            dispatch({
+                                type: AppActionType.ChangePage,
+                                page: Page.Settings,
+                            })
+                        }
+                        onRemoveChampion={removeChampion}
+                        startChampionSelection={startChampionSelection}
+                        moveChampion={moveChampion}
+                    />
                 );
 
             case Page.SelectChampion:
                 return (
                     <SelectChamp
-                        onChampionSelected={handleChampionSelected}
+                        onChampionSelected={championSelected}
                         onCancel={cancelChampionSelect}
                     />
                 );
@@ -294,7 +273,7 @@ export default function App() {
                             onClick={() =>
                                 dispatch({
                                     type: AppActionType.ChangePage,
-                                    changePage: Page.ViewUserSelections,
+                                    page: Page.ViewUserSelections,
                                 })
                             }
                         >
