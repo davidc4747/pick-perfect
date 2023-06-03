@@ -35,7 +35,8 @@
     opacity: 0;
 }
 
-.coverButton:hover {
+.coverButton:hover,
+.coverButton:focus {
     opacity: 0.8;
     font-weight: bold;
     color: var(--primaryColor);
