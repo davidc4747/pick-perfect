@@ -14,33 +14,41 @@
 \* ===================== */
 
 .selectionList {
-    display: flex;
-    flex-flow: row wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, var(--icon-size));
+    justify-content: space-between;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.4rem;
 }
 
 .selectionItem {
-    padding-left: 0;
+    padding: 0;
+    background-color: transparent;
+    border: 1px solid transparent;
     transition: 0.2s ease-out padding-left;
+
     user-select: none;
+    cursor: grab;
 }
-.selectionItemDragStart {
+.selectionItem:hover {
+    border-color: var(--secondaryColor);
+}
+.selectionItem:focus {
+    border-color: var(--primaryColor);
+}
+.selectionItemDragging {
     opacity: 0.4;
     filter: grayscale(80%);
 }
 .selectionItemDragOver {
-    padding-left: var(--icon-size);
+    border-color: var(--primaryColor);
+    filter: saturate(1.2);
 }
 
 .selectionItem > img {
-    width: var(--icon-size);
-    height: var(--icon-size);
+    display: block;
+    width: 100%;
     background-color: var(--secondaryColor);
-}
-
-.selectionItem > button {
-    cursor: grab;
 }
 
 /* ======================== *\
@@ -48,9 +56,10 @@
 \* ======================== */
 
 .default {
-    display: flex;
-    flex-flow: row wrap;
-    align-items: flex-start;
+    display: grid;
+    grid: 50% 50% / 50% 50%;
+
+    padding: 0;
 
     width: var(--icon-size);
     height: var(--icon-size);
@@ -59,9 +68,35 @@
     cursor: pointer;
     position: relative;
 }
+.default:before {
+    content: "View Defaults";
+    grid-area: span 2 / span 2;
+    padding: 0 0.4rem;
+
+    position: absolute;
+    z-index: 10;
+
+    display: flex;
+    align-items: center;
+
+    height: 100%;
+
+    font-weight: bold;
+    font-size: var(--header5);
+
+    background-color: var(--secondaryColor);
+    color: var(--primaryColor);
+    opacity: 0;
+
+    transition: 0.35s ease-out opacity, 0.35s ease-out color;
+}
+.default:hover:before {
+    opacity: 0.8;
+    color: var(--primaryColor);
+}
 
 .default > img {
-    width: 50%;
+    width: 100%;
     filter: grayscale(100%);
 }
 

@@ -101,16 +101,22 @@ export function selectionReducer(
         }
 
         case "CHANGE_ORDER": {
-            const { selectionType, phase, oldIndex, newIndex } = action;
+            const { selectionType, phase } = action;
             const phaseSelections = selections[selectionType][phase];
 
-            // Insert at it's new Positon
-            phaseSelections.splice(newIndex, 0, phaseSelections[oldIndex]);
-            // Remove from it's old Position
-            phaseSelections.splice(
-                newIndex > oldIndex ? oldIndex : oldIndex + 1,
-                1
+            const oldIndex = Math.max(
+                Math.min(action.oldIndex, phaseSelections.length - 1),
+                0
             );
+            const newIndex = Math.max(
+                Math.min(action.newIndex, phaseSelections.length - 1),
+                0
+            );
+
+            // Swap values
+            const temp = phaseSelections[newIndex];
+            phaseSelections[newIndex] = phaseSelections[oldIndex];
+            phaseSelections[oldIndex] = temp;
 
             return {
                 ...selections,

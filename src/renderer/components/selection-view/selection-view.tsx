@@ -1,11 +1,10 @@
-import styles from "./selection-view.module.css";
+import styles, { selectionItem } from "./selection-view.module.css";
 import { getChampionMap } from "../../services/championData";
 import {
     UserSelections,
     UserSelectionType,
     ChampionSelectPhase,
 } from "../../../shared/types";
-import CoverButton from "../cover-button/cover-button";
 import Droppable from "../dragdrop/droppable";
 import DragNDrop from "../dragdrop/dragndrop";
 
@@ -41,43 +40,82 @@ export default function SelectionView(props: PropTypes) {
     const defaultSelection = selection["all"][phase];
     const champData = getChampionMap();
 
+    function handleKeybind(
+        e: React.KeyboardEvent<HTMLElement>,
+        championId: number
+    ) {
+        switch (e.key) {
+            case "Backspace":
+            case "Delete":
+                onRemoveChampion(phase, championId);
+                document.activeElement;
+                break;
+            case "ArrowLeft": {
+                const index = phaseSelection.indexOf(championId);
+                onMoveChampion(
+                    phase,
+                    index,
+                    index - 1 < 0 ? phaseSelection.length : index - 1
+                );
+                break;
+            }
+            case "ArrowRight": {
+                const index = phaseSelection.indexOf(championId);
+                onMoveChampion(
+                    phase,
+                    index,
+                    (index + 1) % phaseSelection.length
+                );
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+
     return (
         <>
             <h3 className={styles.header}>{getTitle(phase)}</h3>
-            <ul
+
+            {/* Champions */}
+            <section
                 data-testid={`selections-${phase}`}
                 className={styles.selectionList}
+                role="application"
             >
                 {phaseSelection?.map((id, index) => (
                     <DragNDrop
                         key={id}
                         data={{ index, championId: id, phase }}
-                        dragStartClass={styles.selectionItemDragStart}
+                        dragStartClass={styles.selectionItemDragging}
                         dragOverClass={styles.selectionItemDragOver}
                         onDrop={(data) =>
                             onMoveChampion(phase, data.index, index)
                         }
                     >
-                        <li
+                        <button
                             data-testid={`champion-${id}`}
-                            className={styles.selectionItem}
+                            className={selectionItem}
                             onContextMenu={() => onRemoveChampion(phase, id)}
+                            onKeyUp={(e) => handleKeybind(e, id)}
                         >
                             <img
                                 title={champData.get(id)?.name}
                                 alt={champData.get(id)?.name}
                                 src={champData.get(id)?.image}
                             ></img>
-                        </li>
+                        </button>
                     </DragNDrop>
                 ))}
 
                 {/* Default Selections */}
                 {currentTab !== "all" && defaultSelection.length > 0 && (
-                    <li
+                    <button
                         data-testid={`champion-defaults`}
                         className={styles.default}
                         title={`All Roles`}
+                        onClick={viewAllTab}
                     >
                         {defaultSelection?.slice(0, 4).map((id) => (
                             <img
@@ -86,12 +124,10 @@ export default function SelectionView(props: PropTypes) {
                                 src={champData.get(id)?.image}
                             ></img>
                         ))}
-                        <CoverButton
-                            text="Show Your Defaults"
-                            onClick={viewAllTab}
-                        />
-                    </li>
+                    </button>
                 )}
+
+                {/* Add Champion Button */}
                 <Droppable
                     dragOverClass={styles.selectionItemDragOver}
                     onDrop={(data) =>
@@ -102,16 +138,14 @@ export default function SelectionView(props: PropTypes) {
                         )
                     }
                 >
-                    <li className={styles.selectionItem}>
-                        <button
-                            className={styles.addButton}
-                            onClick={() => onAddChampion(phase)}
-                        >
-                            Add Champion
-                        </button>
-                    </li>
+                    <button
+                        className={styles.addButton}
+                        onClick={() => onAddChampion(phase)}
+                    >
+                        Add Champion
+                    </button>
                 </Droppable>
-            </ul>
+            </section>
         </>
     );
 }
