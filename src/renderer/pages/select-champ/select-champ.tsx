@@ -1,4 +1,4 @@
-import { useState, useRef, ChangeEvent, useEffect } from "react";
+import { useState, useRef, ChangeEvent } from "react";
 import {
     cancelButton,
     searchbar,
@@ -9,7 +9,7 @@ import {
 } from "./select-champ.module.css";
 import { getChampionList } from "../../services/championData";
 import { ChampionData } from "../../services/championData";
-import { useKeyPress } from "../../services/useKeyPress";
+import { useKeyBinds } from "../../services/useKeyBinds";
 import CoverButton from "../../components/cover-button/cover-button";
 
 /* ===================== *\
@@ -34,20 +34,16 @@ export default function SelectChamp(props: PropTypes) {
     // Keyboard Shortcuts
     const searchRef = useRef<HTMLInputElement>(null);
     const dialogRef = useRef<HTMLDialogElement>(null);
-    useKeyPress(function (e: KeyboardEvent) {
-        switch (e.key) {
-            case "Escape":
-                onCancel();
-                break;
-            case "?":
-                dialogRef.current?.showModal();
-                e.preventDefault();
-                break;
-            case "/":
-                searchRef.current?.focus();
-                e.preventDefault();
-                break;
-        }
+    useKeyBinds({
+        Escape() {
+            onCancel();
+        },
+        "?"() {
+            dialogRef.current?.showModal();
+        },
+        "/"() {
+            searchRef.current?.focus();
+        },
     });
 
     return (
