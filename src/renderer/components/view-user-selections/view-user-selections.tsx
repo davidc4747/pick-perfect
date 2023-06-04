@@ -4,7 +4,7 @@ import {
     UserSelectionType,
     UserSelections,
 } from "../../../shared/types";
-import PositionSelector from "../position-selector/position-selector";
+import NavBar from "../navbar/navbar";
 import SelectionView from "../selection-view/selection-view";
 
 /* ===================== *\
@@ -41,11 +41,10 @@ export default function ViewUserSelections(
 
     return (
         <>
-            <PositionSelector
-                position={currentTab}
+            <NavBar
+                value={currentTab}
                 onChange={onTabChange}
                 onSettingsOpened={onSettingsOpened}
-                onRemoveChampion={onRemoveChampion}
             />
 
             <SelectionView

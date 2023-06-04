@@ -114,6 +114,8 @@ input:focus::placeholder {
     color: var(--textColor);
 }
 input:focus {
-    outline: none;
     border: 1px solid var(--primaryColor);
+}
+input[type="text"]:focus {
+    outline: none;
 }

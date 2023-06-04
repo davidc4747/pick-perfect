@@ -1,0 +1,66 @@
+/* ===================== *\
+    #Navbar
+\* ===================== */
+
+.navbar {
+    margin: 2rem 0 1.5rem;
+
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    background-color: var(--background);
+    user-select: none;
+
+    --icon-size: 42px;
+}
+
+/* ------------------------- *\
+    #NavItem
+\* ------------------------- */
+
+.navItem {
+    padding: 0.3rem;
+    border: none;
+
+    background-color: transparent;
+    color: var(--secondaryColor);
+    fill: var(--secondaryColor);
+    filter: grayscale(100%);
+
+    transition: 0.25s ease-out background-color, 0.2s ease-out scale,
+        0.25s ease-out fill, 0.25s ease-out color;
+}
+.navItem:hover,
+.navItem:focus {
+    scale: 1.3;
+    border: none;
+    cursor: pointer;
+}
+.navItem:focus {
+    outline: auto;
+}
+.navItemSelected {
+    scale: 1.3;
+    filter: grayscale(0%);
+
+    /* Depending on what tag the 'positionIcon' is; color is defined differently */
+    color: var(--primaryColor);
+    fill: var(--primaryColor);
+}
+
+.navItem > * {
+    width: var(--icon-size);
+}
+
+/* ------------------------- *\
+    #Right Nav
+\* ------------------------- */
+
+.rightNav {
+    margin-left: auto;
+
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
