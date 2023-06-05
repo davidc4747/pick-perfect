@@ -24,8 +24,8 @@
     border: none;
 
     background-color: transparent;
-    color: var(--secondaryColor);
-    fill: var(--secondaryColor);
+    color: var(--textColor);
+    fill: var(--textColor);
     filter: grayscale(100%);
 
     transition: 0.25s ease-out background-color, 0.2s ease-out scale,

@@ -6,10 +6,10 @@
     --icon-size: 100px;
 
     /* Colors */
-    --gold: #c79e57;
+    --gold: #d1af75;
     --black: #09141b;
     --white: #fbfbfb;
-    --light-grey: #868479;
+    --light-grey: #afb5bb;
     --grey: #24282c;
 
     /* Type Scaling */
@@ -23,9 +23,9 @@
     --copyrightText: 0.7rem;
 
     /* Theme */
+    --background: var(--black);
     --primaryColor: var(--gold);
     --secondaryColor: var(--grey);
-    --background: var(--black);
     --textColor: var(--light-grey);
     --textColorInverted: black;
 }
