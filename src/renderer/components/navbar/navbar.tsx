@@ -1,8 +1,8 @@
-import styles, {
+import {
     navbar,
     navItem,
     navItemSelected,
-    rightNav,
+    settingsBtn,
 } from "./navbar.module.css";
 import { UserSelectionType } from "../../../shared/types";
 import Icon from "../icon/icon";
@@ -62,8 +62,9 @@ export default function NavBar(props: PropTypes) {
                     "all" === value ? navItemSelected : "",
                 ].join(" ")}
                 onClick={() => onChange("all")}
+                aria-label={`View all lanes selections`}
             >
-                <Icon className={styles.positionIcon} name="house-solid" />
+                <Icon name="house-solid" />
             </button>
 
             {positionList.map((item) => (
@@ -75,21 +76,20 @@ export default function NavBar(props: PropTypes) {
                     ].join(" ")}
                     data-testid={`position-${item.tag}`}
                     onClick={() => onChange(item.tag)}
+                    aria-label={`View ${item.tag} lane selections`}
                 >
                     <img src={item.image} alt={item.displayName} />
                 </button>
             ))}
 
-            <aside className={rightNav}>
-                <button
-                    data-testid={`btn-settings`}
-                    className={navItem}
-                    onClick={onSettingsOpened}
-                    aria-label="Open Settings"
-                >
-                    <Icon name="gear-solid" />
-                </button>
-            </aside>
+            <button
+                data-testid={`btn-settings`}
+                className={[navItem, settingsBtn].join(" ")}
+                onClick={onSettingsOpened}
+                aria-label="Open Settings"
+            >
+                <Icon name="gear-solid" />
+            </button>
         </nav>
     );
 }

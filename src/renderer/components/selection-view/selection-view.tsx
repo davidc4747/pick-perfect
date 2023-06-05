@@ -141,6 +141,7 @@ export default function SelectionView(props: PropTypes) {
                     <button
                         className={styles.addButton}
                         onClick={() => onAddChampion(phase)}
+                        aria-label={`Add Champion to your ${getTitle(phase)}`}
                     >
                         Add Champion
                     </button>
