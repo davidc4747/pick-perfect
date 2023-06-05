@@ -1,11 +1,13 @@
-// import { viewUserSelections } from "./view-user-selections.module.css";
+import { useRef } from "react";
 import {
     ChampionSelectPhase,
     UserSelectionType,
     UserSelections,
 } from "../../../shared/types";
+import { useKeyBinds } from "../../services/useKeyBinds";
 import NavBar from "../navbar/navbar";
 import SelectionView from "../selection-view/selection-view";
+import ShortcutDialog from "../shortcut-dialog/shortcut-dialog";
 
 /* ===================== *\
     # View User Selections
@@ -39,8 +41,29 @@ export default function ViewUserSelections(
     } = props;
     const viewAllTab = () => onTabChange("all");
 
+    // Keyboard Shortcuts
+    const dialogRef = useRef<HTMLDialogElement>(null);
+    useKeyBinds({
+        "?"() {
+            dialogRef.current?.showModal();
+        },
+        s() {
+            onSettingsOpened();
+        },
+    });
+
     return (
         <>
+            <ShortcutDialog
+                ref={dialogRef}
+                keybinds={[
+                    ["?", "Shortcut Help"],
+                    ["s", "Open Settings"],
+                    ["F1 → F6", "Change Tab"],
+                    ["Backspace/Delete", "Delete Champion"],
+                    ["Left/Right Arrow Keys", "Reorder Champions"],
+                ]}
+            />
             <NavBar
                 value={currentTab}
                 onChange={onTabChange}

@@ -1,0 +1,53 @@
+/* ===================== *\
+    # Shortcut Dialog
+\* ===================== */
+
+.shortcutDialog {
+    padding: 1rem;
+    border: 1px solid var(--secondaryColor);
+    border-radius: 8px;
+
+    min-width: 400px;
+
+    background-color: var(--background);
+    color: var(--textColor);
+}
+.shortcutDialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+
+    margin: 0;
+    padding: 0;
+    padding-bottom: 0.4rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--secondaryColor);
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+/* ------------------------- *\
+    #Keybind
+\* ------------------------- */
+
+.keyItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.keybind {
+    padding: 0.3rem 0.6rem;
+    border-radius: 5px;
+
+    background-color: var(--secondaryColor);
+    background-color: #161718;
+    color: var(--primaryColor);
+    font-weight: bold;
+}

@@ -11,6 +11,7 @@ import { getChampionList } from "../../services/championData";
 import { ChampionData } from "../../services/championData";
 import { useKeyBinds } from "../../services/useKeyBinds";
 import CoverButton from "../../components/cover-button/cover-button";
+import ShortcutDialog from "../../components/shortcut-dialog/shortcut-dialog";
 
 /* ===================== *\
     # Select Champ
@@ -48,6 +49,14 @@ export default function SelectChamp(props: PropTypes) {
 
     return (
         <>
+            <ShortcutDialog
+                ref={dialogRef}
+                keybinds={[
+                    ["?", "Shortcut Help"],
+                    ["/", "Search"],
+                    ["Escape", "Cancel Champion Select"],
+                ]}
+            />
             <button
                 data-testid="btn-cancel"
                 className={cancelButton}
@@ -100,15 +109,6 @@ export default function SelectChamp(props: PropTypes) {
                     </li>
                 ))}
             </ul>
-
-            <dialog ref={dialogRef}>
-                <h3>Keyboard Shortcuts</h3>
-                <ul>
-                    <li>Close page - Escape</li>
-                    <li>Shortcut help - ?</li>
-                    <li>Search - /</li>
-                </ul>
-            </dialog>
         </>
     );
 }
