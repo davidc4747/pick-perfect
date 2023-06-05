@@ -50,6 +50,12 @@ export default function ViewUserSelections(
         s() {
             onSettingsOpened();
         },
+        F1: () => onTabChange("all"),
+        F2: () => onTabChange("top"),
+        F3: () => onTabChange("jungle"),
+        F4: () => onTabChange("middle"),
+        F5: () => onTabChange("utility"),
+        F6: () => onTabChange("bottom"),
     });
 
     return (
