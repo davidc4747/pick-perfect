@@ -25,15 +25,8 @@ import {
     getMyAssignedPosition,
     getUnPickableChampions,
 } from "../riot-lcu/session-helpers";
+import { wait } from "./utils";
 import { getHoverList, getBanList, getPickList } from "./userSelections";
-
-/* ======================== *\
-    #Utils
-\* ======================== */
-
-function wait(miliseconds: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, miliseconds));
-}
 
 /* ======================== *\
     #Start
@@ -43,10 +36,20 @@ export async function endAutoScript() {
     await disconnect();
 }
 
-export async function startAutoScript() {
-    await connect();
-    console.log("Running...");
+export async function startAutoScript(): Promise<void> {
+    const [status] = await connect();
+    if (status === "Connected") {
+        console.log(status, "Running...");
+        await setupEvents();
+    } else {
+        // Keep trying until a connection is made
+        console.log("LeagueClientUx Not Found..");
+        await wait(1000);
+        await startAutoScript();
+    }
+}
 
+async function setupEvents(): Promise<void> {
     onMatchFound(acceptReadyCheck);
     onDodgerQueueFinished(startMatchmaking);
 

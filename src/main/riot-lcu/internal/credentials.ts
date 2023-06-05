@@ -1,4 +1,4 @@
-import { exec } from "child_process";
+import { execAsync } from "../../services/utils";
 import * as https from "https";
 
 const RIOT_GAMES_CERT = `
@@ -43,48 +43,10 @@ interface Credentials {
     agent: https.Agent;
 }
 
-export async function getCredentials(): Promise<Credentials> {
-    return new Promise(function retry(resolve, reject) {
-        // Keep trying until something Comes back.
-        getLeagueProccessData().then(function tick(data) {
-            if (data) {
-                resolve(data);
-            } else {
-                setTimeout(retry, 250, resolve, reject);
-            }
-        });
-    });
-}
-
-async function getLeagueProccessData(): Promise<Credentials | null> {
-    const name = "LeagueClientUx";
-    const isWindows = process.platform === "win32";
-
-    // Get the correct command for the Operating System
-    // NOTE: Credit for this comes from https://github.com/matsjla/league-connect/blob/master/src/authentication.ts
-    let command: string;
-    if (isWindows) {
-        command = `Get-CimInstance -Query "SELECT * from Win32_Process WHERE name LIKE '${name}.exe'" | Select-Object CommandLine | fl`;
-    } else {
-        command = `ps x -o args | grep '${name}'`;
-    }
-
-    try {
-        // Parse data from the command output
-        const map = new Map<string, string>();
-        const stdout: string = await execAsync(
-            command,
-            isWindows ? { shell: "powershell" } : {}
-        );
-        stdout
-            .replaceAll(/[\s\r\n]+/g, " ")
-            .split('" "--')
-            .filter((str, index) => Boolean(str) && index > 0)
-            .forEach((str) => {
-                const [key, value] = str.split("=");
-                map.set(key, value ?? "");
-            });
-
+export async function getCredentials(): Promise<Credentials | null> {
+    const stdout = await getProccessInfo("LeagueClientUx");
+    if (stdout) {
+        const map = parseProccessInfo(stdout);
         const password = map.get("remoting-auth-token") ?? "";
         const sslConfiguredAgent = new https.Agent({ ca: RIOT_GAMES_CERT });
         const authentication = Buffer.from(`riot:${password}`);
@@ -100,24 +62,49 @@ async function getLeagueProccessData(): Promise<Credentials | null> {
             authorization: `Basic ${authentication.toString("base64")}`,
             agent: sslConfiguredAgent,
         };
-    } catch (err) {
+    } else {
         return null;
     }
 }
 
 /* ======================== *\
-    # Utils
+    #Helpers
 \* ======================== */
 
-async function execAsync(command: string, options: any): Promise<any> {
-    return new Promise(function (resolve, reject) {
-        exec(command, options, function (err, stdout, stderr) {
-            if (err) {
-                console.error(err, stderr);
-                reject(null);
-            } else {
-                resolve(stdout);
-            }
+async function getProccessInfo(processName: string): Promise<string | null> {
+    try {
+        const isWindows = process.platform === "win32";
+
+        // Get the correct command for the Operating System
+        // NOTE: Credit for this comes from https://github.com/matsjla/league-connect/blob/master/src/authentication.ts
+        let command: string;
+        if (isWindows) {
+            command = `Get-CimInstance -Query "SELECT * from Win32_Process WHERE name LIKE '${processName}.exe'" | Select-Object CommandLine | fl`;
+        } else {
+            command = `ps x -o args | grep '${processName}'`;
+        }
+
+        const stdout = await execAsync(
+            command,
+            isWindows ? { shell: "powershell" } : {}
+        );
+        return stdout !== "" ? stdout : null;
+    } catch (err) {
+        return null;
+    }
+}
+
+function parseProccessInfo(stdout: string): Map<string, string> {
+    // Parse data from the command output
+    const map = new Map<string, string>();
+    stdout
+        .replaceAll(/[\s\r\n]+/g, " ")
+        .split('" "--')
+        .filter((str, index) => Boolean(str) && index > 0)
+        .forEach((str) => {
+            const [key, value] = str.split("=");
+            map.set(key, value ?? "");
         });
-    });
+
+    return map;
 }

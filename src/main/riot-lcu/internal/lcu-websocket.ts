@@ -1,5 +1,4 @@
 import { getCredentials } from "./credentials";
-// @ts-ignore
 import WebSocket from "ws";
 
 enum MESSAGE_TYPES {
@@ -14,6 +13,57 @@ enum MESSAGE_TYPES {
     EVENT = 8,
 }
 
+let ws: WebSocket | null = null;
+
+/* ======================== *\
+    #
+\* ======================== */
+
+type ConnectionStatus =
+    | ["RiotServerNotFound"]
+    | ["WebsocketError", Error]
+    | ["Connected"];
+
+export async function connect(): Promise<ConnectionStatus> {
+    const cred = await getCredentials();
+    if (cred === null) return ["RiotServerNotFound"];
+
+    return new Promise(function (resolve) {
+        // Attempt to connect to WebSocket Server
+        const { host, port, username, password, agent } = cred;
+        ws = new WebSocket(`wss://${username}:${password}@${host}:${port}`, {
+            agent,
+        });
+
+        // Failed to connect, Send back an Error status
+        ws.on("error", (err) => resolve(["WebsocketError", err]));
+
+        // Subscribe to ALL events, and handle any responses
+        ws.on("open", () => {
+            ws?.send(
+                JSON.stringify([MESSAGE_TYPES.SUBSCRIBE, "OnJsonApiEvent"])
+            );
+            ws?.on("message", handleMessage);
+            resolve(["Connected"]);
+        });
+    });
+}
+
+export function disconnect(): Promise<void> {
+    return new Promise(function (resolve) {
+        if (ws) {
+            ws.on("close", resolve);
+            ws.close();
+        } else {
+            resolve();
+        }
+    });
+}
+
+/* ------------------------- *\
+    #Events
+\* ------------------------- */
+
 type EventTypes = "CREATE" | "UPDATE" | "DELETE";
 
 interface Event {
@@ -21,50 +71,7 @@ interface Event {
     uri: string;
     callback: (data: any) => void;
 }
-
-let ws: any | null = null;
 let eventList: Event[] = [];
-
-/* ======================== *\
-    #
-\* ======================== */
-
-export async function connect(): Promise<void> {
-    const { host, port, username, password, authorization, agent } =
-        await getCredentials();
-
-    ws = new WebSocket(`wss://${username}:${password}@${host}:${port}`, {
-        Authorization: authorization,
-        agent,
-    });
-    ws.on("open", () => {
-        ws.send(JSON.stringify([MESSAGE_TYPES.SUBSCRIBE, "OnJsonApiEvent"]));
-    });
-    ws.on("message", function (response: any) {
-        const resString = response.toString();
-        if (resString) {
-            // [opcode, eventName, data]
-            const data = JSON.parse(resString)[2];
-
-            for (const event of eventList) {
-                if (
-                    data.uri === event.uri.toLowerCase() &&
-                    data.eventType.toUpperCase() ===
-                        event.eventType.toUpperCase()
-                ) {
-                    event.callback(data.data);
-                }
-            }
-        }
-    });
-}
-
-export function disconnect(): Promise<void> {
-    ws.close();
-    return new Promise(function (resolve) {
-        ws.on("close", resolve);
-    });
-}
 
 export function clearEvents() {
     eventList = [];
@@ -85,4 +92,27 @@ export function onEvent(
         uri,
         callback,
     });
+}
+
+type MessageResponse = [
+    opcode: string,
+    eventName: string,
+    data: { uri: string; eventType: EventTypes; data: any }
+];
+function handleMessage(message: string) {
+    const resString = message.toString();
+    if (resString) {
+        const res: MessageResponse = JSON.parse(resString);
+        const data = res[2];
+
+        // Notify any listeners that need to know about this WebSocket message
+        for (const event of eventList) {
+            if (
+                data.uri === event.uri.toLowerCase() &&
+                data.eventType.toUpperCase() === event.eventType.toUpperCase()
+            ) {
+                event.callback(data.data);
+            }
+        }
+    }
 }
