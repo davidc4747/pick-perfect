@@ -97,8 +97,8 @@ async function setupEvents(): Promise<void> {
         const { timer } = session;
         await wait(timer.adjustedTimeLeftInPhase - 4000);
 
-        const updatedSession = await getSession(); // Grab an Updated Version of Session
-        if (updatedSession) {
+        const [status, updatedSession] = await getSession(); // Grab an Updated Version of Session
+        if (status === "Success") {
             const myRole = getMyAssignedPosition(updatedSession);
             const disabledChampions = getUnPickableChampions(updatedSession);
 
@@ -134,8 +134,8 @@ async function setupEvents(): Promise<void> {
         );
     });
     async function pickMyChampion(): Promise<void> {
-        const updatedSession = await getSession(); // Grab an up to date Version of Session
-        if (updatedSession) {
+        const [status, updatedSession] = await getSession(); // Grab an up to date Version of Session
+        if (status === "Success") {
             const myRole = getMyAssignedPosition(updatedSession);
             const disabledChampions = getUnPickableChampions(updatedSession);
             const updatedPickAction = getMyPickAction(updatedSession);

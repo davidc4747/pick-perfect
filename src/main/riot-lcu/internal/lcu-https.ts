@@ -7,12 +7,22 @@ import { getCredentials } from "./credentials";
 
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
-export async function sendRequest(
+export type LcuResponse<T extends Record<string, any> | string | void> =
+    | ["RiotServerNotFound"]
+    | ["Error", any]
+    | ["Success", T];
+
+export async function sendRequest<
+    T extends Record<string, any> | string | void
+>(
     method: HttpMethod,
     APIendpoint: string,
-    body?: any
-): Promise<any> {
-    const { host, port, authorization, agent } = await getCredentials();
+    body?: Record<string, any>
+): Promise<LcuResponse<T>> {
+    const cred = await getCredentials();
+    if (cred === null) return ["RiotServerNotFound"];
+
+    const { host, port, authorization, agent } = cred;
     const options = {
         method: method.toUpperCase(),
         headers: {
@@ -24,10 +34,16 @@ export async function sendRequest(
     };
 
     // Send Request
-    const response = await fetch(
-        `https://${host}:${port}${APIendpoint}`,
-        options
-    );
+    let response: any;
+    try {
+        response = await fetch(
+            `https://${host}:${port}${APIendpoint}`,
+            options
+        );
+    } catch (err) {
+        console.error("Unable to fetch:", method, APIendpoint);
+        return ["Error", err];
+    }
 
     // Try to Parse as JSON, if not use the string
     let data: any = await response.text();
@@ -35,7 +51,7 @@ export async function sendRequest(
         data = JSON.parse(data);
     } catch (err) {
         // "data" is not valid JSON
-        // just use the original string value
+        // just return string value
     }
 
     // Some Error logging
@@ -43,8 +59,9 @@ export async function sendRequest(
         console.error("ERROR Invalid riot-lcu request:", method, APIendpoint);
         console.error("Request Body:", body);
         console.error("Response:", data);
+        return ["Error", data];
     }
 
     // Send usable data back :)
-    return data;
+    return ["Success", data];
 }

@@ -1,11 +1,11 @@
-import { sendRequest } from "./internal/lcu-https";
+import { LcuResponse, sendRequest } from "./internal/lcu-https";
 import { CurrentSummoner, Lobby, Action, ChampSelectSession } from "./types";
 
 /* ======================== *\
     #Summoner
 \* ======================== */
 
-export function getCurrentSummoner(): Promise<CurrentSummoner> {
+export function getCurrentSummoner(): Promise<LcuResponse<CurrentSummoner>> {
     return sendRequest("GET", "/lol-summoner/v1/current-summoner");
 }
 
@@ -13,10 +13,11 @@ export function getCurrentSummoner(): Promise<CurrentSummoner> {
     #Lobby
 \* ======================== */
 
-export function openRankedLobby(): Promise<Lobby> {
+export async function openRankedLobby(): Promise<LcuResponse<Lobby>> {
     return sendRequest("POST", "/lol-lobby/v2/lobby", { queueId: 420 });
 }
-export function openPracticeToolLobby(): Promise<Lobby> {
+
+export function openPracticeToolLobby(): Promise<LcuResponse<Lobby>> {
     return sendRequest("POST", "/lol-lobby/v2/lobby", {
         customGameLobby: {
             configuration: {
@@ -44,19 +45,19 @@ interface StartRespoonse {
     success: boolean;
 }
 
-export function startCustomLobby(): Promise<StartRespoonse> {
+export function startCustomLobby(): Promise<LcuResponse<StartRespoonse>> {
     return sendRequest("POST", "/lol-lobby/v1/lobby/custom/start-champ-select");
 }
 
-export function startMatchmaking(): Promise<void> {
+export function startMatchmaking(): Promise<LcuResponse<void>> {
     return sendRequest("POST", "/lol-lobby/v2/lobby/matchmaking/search");
 }
 
-export function acceptReadyCheck(): Promise<void> {
+export function acceptReadyCheck(): Promise<LcuResponse<void>> {
     return sendRequest("POST", "/lol-matchmaking/v1/ready-check/accept");
 }
 
-export function declineReadyCheck(): Promise<any> {
+export function declineReadyCheck(): Promise<LcuResponse<any>> {
     return sendRequest("POST", "/lol-matchmaking/v1/ready-check/decline");
 }
 
@@ -64,28 +65,23 @@ export function declineReadyCheck(): Promise<any> {
     #Champion Select
 \* ======================== */
 
-export async function getSession(): Promise<ChampSelectSession | undefined> {
-    try {
-        return await sendRequest("GET", `/lol-champ-select/v1/session`);
-    } catch (err) {
-        console.error("Unable to fetch 'session'", err);
-        return undefined;
-    }
+export async function getSession(): Promise<LcuResponse<ChampSelectSession>> {
+    return await sendRequest("GET", `/lol-champ-select/v1/session`);
 }
 
 /* ------------------------- *\
     #
 \* ------------------------- */
 
-export function getDisabledChampions(): Promise<number[]> {
+export function getDisabledChampions(): Promise<LcuResponse<number[]>> {
     return sendRequest("GET", `/lol-champ-select/v1/disabled-champion-ids`);
 }
 
-export function getBannableChampions(): Promise<number[]> {
+export function getBannableChampions(): Promise<LcuResponse<number[]>> {
     return sendRequest("GET", `/lol-champ-select/v1/bannable-champion-ids`);
 }
 
-export function getPickableChampions(): Promise<number[]> {
+export function getPickableChampions(): Promise<LcuResponse<number[]>> {
     return sendRequest("GET", `/lol-champ-select/v1/pickable-champion-ids`);
 }
 
@@ -96,7 +92,7 @@ export function getPickableChampions(): Promise<number[]> {
 export function hoverChampion(
     pickAction: Action,
     championId: number
-): Promise<ChampSelectSession> {
+): Promise<LcuResponse<ChampSelectSession>> {
     return sendRequest(
         "PATCH",
         `/lol-champ-select/v1/session/actions/${pickAction.id}`,
@@ -110,7 +106,7 @@ export function hoverChampion(
 export function pickChampion(
     pickAction: Action,
     championId: number
-): Promise<ChampSelectSession> {
+): Promise<LcuResponse<ChampSelectSession>> {
     return sendRequest(
         "PATCH",
         `/lol-champ-select/v1/session/actions/${pickAction.id}`,
@@ -125,7 +121,7 @@ export function pickChampion(
 export function banChampion(
     banAction: Action,
     championId: number
-): Promise<ChampSelectSession> {
+): Promise<LcuResponse<ChampSelectSession>> {
     return sendRequest(
         "PATCH",
         `/lol-champ-select/v1/session/actions/${banAction.id}`,
