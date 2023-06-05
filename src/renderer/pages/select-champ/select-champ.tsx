@@ -47,6 +47,14 @@ export default function SelectChamp(props: PropTypes) {
         },
     });
 
+    function handleEnter(e: React.KeyboardEvent<HTMLInputElement>) {
+        // If they press enter while the Searchbar is Focused
+        if (e.key === "Enter" && filterChampionList.length === 1) {
+            const [champ] = filterChampionList;
+            onChampionSelected(champ.id);
+        }
+    }
+
     return (
         <>
             <ShortcutDialog
@@ -76,6 +84,7 @@ export default function SelectChamp(props: PropTypes) {
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                         setSearchString(e.target.value)
                     }
+                    onKeyUp={handleEnter}
                     // As long as the use knows before hand that they're being redirect, this should be okay [DC]
                     autoFocus
                 />
