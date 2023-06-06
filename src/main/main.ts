@@ -11,6 +11,7 @@ import {
 import { listenToRiotEvents } from "./services/auto-script";
 import { UserSelections } from "../shared/types";
 import { updateSelections, getAllSelections } from "./services/userSelections";
+import { readUserData, saveUserData } from "./services/userSavedData";
 
 /* ======================== *\
     #App
@@ -25,10 +26,18 @@ app.whenReady().then(async function () {
         mainWindow.show();
     });
 
+    // Pull User Selections from file, if they exist
+    const data = await readUserData(app);
+    if (data) updateSelections(data);
+
+    // Start up event listeners
     await listenToRiotEvents();
 });
 
 async function closeApp() {
+    // Save Selections to a file
+    await saveUserData(app, getAllSelections());
+
     app.exit();
 }
 

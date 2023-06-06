@@ -60,11 +60,9 @@ export function getPickList(role: AssignedPosition): number[] {
 }
 
 export function getAllSelections(): UserSelections {
-    // TODO: Pull from file on first load
     return userSelection;
 }
 
 export function updateSelections(newUserSelection: UserSelections) {
     userSelection = newUserSelection;
-    // TODO: Save to file on first load
 }
