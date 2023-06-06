@@ -8,7 +8,7 @@ import {
     BrowserWindow,
     IpcMainEvent,
 } from "electron";
-import { startAutoScript, endAutoScript } from "./services/auto-script";
+import { listenToRiotEvents } from "./services/auto-script";
 import { UserSelections } from "../shared/types";
 import { updateSelections, getAllSelections } from "./services/userSelections";
 
@@ -20,16 +20,15 @@ let mainWindow: BrowserWindow;
 app.whenReady().then(async function () {
     const appIcon = path.resolve("dist/champ-placeholder.png");
     mainWindow = createWindow(appIcon);
-    await startAutoScript();
-
     const tray = createTrayIcon(appIcon, closeApp);
     tray.on("click", function name() {
         mainWindow.show();
     });
+
+    await listenToRiotEvents();
 });
 
 async function closeApp() {
-    await endAutoScript();
     app.exit();
 }
 

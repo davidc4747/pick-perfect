@@ -21,7 +21,7 @@ let ws: WebSocket | null = null;
 
 type ConnectionStatus =
     | ["RiotServerNotFound"]
-    | ["WebsocketError", Error]
+    | ["ConnectionError", Error]
     | ["Connected"];
 
 export async function connect(): Promise<ConnectionStatus> {
@@ -36,16 +36,17 @@ export async function connect(): Promise<ConnectionStatus> {
         });
 
         // Failed to connect, Send back an Error status
-        ws.on("error", (err) => resolve(["WebsocketError", err]));
+        ws.on("error", (err) => resolve(["ConnectionError", err]));
 
         // Subscribe to ALL events, and handle any responses
-        ws.on("open", () => {
+        ws.on("open", function () {
             ws?.send(
                 JSON.stringify([MESSAGE_TYPES.SUBSCRIBE, "OnJsonApiEvent"])
             );
             ws?.on("message", handleMessage);
             resolve(["Connected"]);
         });
+        ws?.on("close", clearEvents);
     });
 }
 
@@ -58,6 +59,10 @@ export function disconnect(): Promise<void> {
             resolve();
         }
     });
+}
+
+export function onClose(callback: () => void) {
+    ws?.on("close", callback);
 }
 
 /* ------------------------- *\
@@ -82,11 +87,6 @@ export function onEvent(
     uri: string,
     callback: (data: any) => void
 ) {
-    // if not connected, then connect first
-    // if (!ws) {
-    //     connect();
-    // }
-
     eventList.push({
         eventType,
         uri,

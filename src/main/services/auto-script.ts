@@ -1,9 +1,5 @@
 import { ChampSelectSession, Action } from "../riot-lcu/types";
-import {
-    connect,
-    disconnect,
-    clearEvents,
-} from "../riot-lcu/internal/lcu-websocket";
+import { connect, onClose } from "../riot-lcu/internal/lcu-websocket";
 import {
     onMatchFound,
     onHonorCompleted,
@@ -29,28 +25,28 @@ import {
     getMyAssignedPosition,
     getUnPickableChampions,
 } from "../riot-lcu/session-helpers";
-import { wait } from "./utils";
 import { getHoverList, getBanList, getPickList } from "./userSelections";
+import { wait } from "./utils";
 
 /* ======================== *\
     #Checking Connection
 \* ======================== */
 
-export async function endAutoScript() {
-    clearEvents();
-    await disconnect();
-}
-
-export async function startAutoScript(): Promise<void> {
+export async function listenToRiotEvents(): Promise<void> {
     const [status] = await connect();
     if (status === "Connected") {
         console.log(status, "Running...");
-        await setupEvents();
+        // Event are currently being cleared onClose()
+        //    so we have to set them everytime [DC]
+        setupEvents();
+
+        // If the server closes, start looking for it again
+        onClose(async () => await listenToRiotEvents());
     } else {
         // Keep trying until a connection is made
         console.log("LeagueClientUx Not Found..");
         await wait(1000);
-        await startAutoScript();
+        await listenToRiotEvents();
     }
 }
 
@@ -63,8 +59,8 @@ async function setupEvents(): Promise<void> {
     onDodgerQueueFinished(startMatchmaking);
 
     onHonorCompleted(async function () {
-        await wait(300);
-        await openRankedLobby();
+        // await wait(300);
+        // await openRankedLobby();
         await wait(300);
         await startMatchmaking();
     });
