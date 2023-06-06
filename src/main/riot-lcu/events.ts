@@ -41,6 +41,17 @@ export function onExitChampionSelect(
     onEvent("DELETE", "/lol-champ-select/v1/session", callback);
 }
 
+export function onHover(callback: (data: ChampSelectSession) => void): void {
+    onEvent(
+        "CREATE",
+        "/lol-champ-select/v1/session",
+        function (data: ChampSelectSession) {
+            // there's some animations playing, just wait for them to finish
+            setTimeout(callback, 9200, data);
+        }
+    );
+}
+
 export function onPlayerBanAction(
     callback: (banAction: Action, session: ChampSelectSession) => void
 ): void {

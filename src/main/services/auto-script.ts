@@ -1,10 +1,14 @@
 import { ChampSelectSession, Action } from "../riot-lcu/types";
-import { connect, disconnect } from "../riot-lcu/internal/lcu-websocket";
+import {
+    connect,
+    disconnect,
+    clearEvents,
+} from "../riot-lcu/internal/lcu-websocket";
 import {
     onMatchFound,
     onHonorCompleted,
     onDodgerQueueFinished,
-    onEnteredChampionSelect,
+    onHover,
     onPlayerBanAction,
     onPlayerPickChanged,
     onPlayerPickCompleted,
@@ -29,10 +33,11 @@ import { wait } from "./utils";
 import { getHoverList, getBanList, getPickList } from "./userSelections";
 
 /* ======================== *\
-    #Start
+    #Checking Connection
 \* ======================== */
 
 export async function endAutoScript() {
+    clearEvents();
     await disconnect();
 }
 
@@ -49,6 +54,10 @@ export async function startAutoScript(): Promise<void> {
     }
 }
 
+/* ======================== *\
+    #Setp Events
+\* ======================== */
+
 async function setupEvents(): Promise<void> {
     onMatchFound(acceptReadyCheck);
     onDodgerQueueFinished(startMatchmaking);
@@ -61,65 +70,23 @@ async function setupEvents(): Promise<void> {
     });
 
     /* ------------------------- *\
-        #Enter Champion Select
+        #Auto-Hover
     \* ------------------------- */
 
-    onEnteredChampionSelect(async function (
-        session: ChampSelectSession
-    ): Promise<void> {
-        console.log("---------------------");
-        await wait(9350); // there's some animations playing, just wait for them to finish
-
-        const myRole = getMyAssignedPosition(session);
-        const disabledChampions = getUnPickableChampions(session);
-        const pickAction = getMyPickAction(session);
-
-        if (myRole && pickAction) {
-            const hoverID =
-                getHoverList(myRole).find(
-                    (id: number) => !disabledChampions.includes(id)
-                ) ?? 0;
-
-            console.log("Hover: ", hoverID);
-            await hoverChampion(pickAction, hoverID);
-        }
-    });
+    onHover(handleHover);
 
     /* ------------------------- *\
         #Auto-Ban
     \* ------------------------- */
 
-    onPlayerBanAction(async function (
-        banAction: Action,
-        session: ChampSelectSession
-    ): Promise<void> {
-        // Give the other players a chance to ban first.
-        const { timer } = session;
-        await wait(timer.adjustedTimeLeftInPhase - 4000);
-
-        const [status, updatedSession] = await getSession(); // Grab an Updated Version of Session
-        if (status === "Success") {
-            const myRole = getMyAssignedPosition(updatedSession);
-            const disabledChampions = getUnPickableChampions(updatedSession);
-
-            if (myRole && banAction) {
-                const banID =
-                    getBanList(myRole).find(
-                        (id: number) => !disabledChampions.includes(id)
-                    ) ?? 0;
-
-                console.log("Ban:", banID);
-                await banChampion(banAction, banID);
-            }
-        }
-    });
+    onPlayerBanAction(handleBan);
 
     /* ------------------------- *\
         #Auto-Pick
     \* ------------------------- */
 
     let timeout: NodeJS.Timeout;
-    // Chance the timer is Player picks manually or Champ Select ends
+    // Stop the timer if Player picks thier champion manually or Champ Select ends
     onPlayerPickChanged(() => clearTimeout(timeout));
     onPlayerPickCompleted(() => clearTimeout(timeout));
     onExitChampionSelect(() => clearTimeout(timeout));
@@ -129,22 +96,69 @@ async function setupEvents(): Promise<void> {
     ): Promise<void> {
         // If only a few seconds left. Lock-in something for them.
         timeout = setTimeout(
-            pickMyChampion,
-            session.timer.adjustedTimeLeftInPhase - 3000
+            handlePick,
+            session.timer.adjustedTimeLeftInPhase - 4000
         );
     });
-    async function pickMyChampion(): Promise<void> {
-        const [status, updatedSession] = await getSession(); // Grab an up to date Version of Session
-        if (status === "Success") {
-            const myRole = getMyAssignedPosition(updatedSession);
-            const disabledChampions = getUnPickableChampions(updatedSession);
-            const updatedPickAction = getMyPickAction(updatedSession);
-            if (myRole && updatedPickAction) {
-                const pickID =
-                    getPickList(myRole).find(
-                        (id: number) => !disabledChampions.includes(id)
-                    ) ?? 0;
+}
 
+/* ======================== *\
+    #Event Listeners
+\* ======================== */
+
+async function handleHover(session: ChampSelectSession): Promise<void> {
+    console.log("---------------------");
+    const myRole = getMyAssignedPosition(session);
+    const disabledChampions = getUnPickableChampions(session);
+    const pickAction = getMyPickAction(session);
+
+    if (myRole && pickAction) {
+        const hoverID = getHoverList(myRole).find(
+            (id) => !disabledChampions.includes(id)
+        );
+        if (hoverID) {
+            console.log("Hover: ", hoverID);
+            await hoverChampion(pickAction, hoverID);
+        }
+    }
+}
+
+async function handleBan(
+    banAction: Action,
+    session: ChampSelectSession
+): Promise<void> {
+    // Give the other players a chance to ban first.
+    const { timer } = session;
+    await wait(timer.adjustedTimeLeftInPhase - 5000);
+
+    const [status, updatedSession] = await getSession(); // Grab an Updated Version of Session
+    if (status === "Success") {
+        const myRole = getMyAssignedPosition(updatedSession);
+        const disabledChampions = getUnPickableChampions(updatedSession);
+
+        if (myRole && banAction) {
+            const banID = getBanList(myRole).find(
+                (id) => !disabledChampions.includes(id)
+            );
+            if (banID) {
+                console.log("Ban:", banID);
+                await banChampion(banAction, banID);
+            }
+        }
+    }
+}
+
+async function handlePick(): Promise<void> {
+    const [status, updatedSession] = await getSession(); // Grab an up to date Version of Session
+    if (status === "Success") {
+        const myRole = getMyAssignedPosition(updatedSession);
+        const disabledChampions = getUnPickableChampions(updatedSession);
+        const updatedPickAction = getMyPickAction(updatedSession);
+        if (myRole && updatedPickAction) {
+            const pickID = getPickList(myRole).find(
+                (id) => !disabledChampions.includes(id)
+            );
+            if (pickID) {
                 console.log("Pick:", myRole, pickID);
                 await pickChampion(updatedPickAction, pickID);
             }
