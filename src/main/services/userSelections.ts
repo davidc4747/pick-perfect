@@ -4,37 +4,37 @@ AssignedPosition;
 
 let userSelection: UserSelections = {
     all: {
-        ban: [],
+        ban: [17],
         hover: [],
         pick: [],
     },
 
     top: {
-        ban: [],
+        ban: [266, 24, 54],
         hover: [],
         pick: [],
     },
 
     jungle: {
-        ban: [],
+        ban: [121, 104, 64],
         hover: [],
         pick: [],
     },
 
     middle: {
-        ban: [],
+        ban: [103, 157, 238],
         hover: [],
         pick: [],
     },
 
     bottom: {
-        ban: [],
+        ban: [202, 81, 236],
         hover: [],
         pick: [],
     },
 
     utility: {
-        ban: [],
+        ban: [412, 350, 117],
         hover: [],
         pick: [],
     },
