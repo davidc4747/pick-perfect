@@ -9,7 +9,7 @@ import {
     UserSelectionType,
     ChampionSelectPhase,
 } from "../../../shared/types";
-import ViewUserSelections from "../view-user-selections/view-user-selections";
+import ViewUserSelections from "../../pages/view-user-selections/view-user-selections";
 import SelectChamp from "../../pages/select-champ/select-champ";
 
 declare const electron: {

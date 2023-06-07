@@ -5,9 +5,9 @@ import {
     UserSelections,
 } from "../../../shared/types";
 import { useKeyBinds } from "../../services/useKeyBinds";
-import NavBar from "../navbar/navbar";
-import SelectionView from "../selection-view/selection-view";
-import ShortcutDialog from "../shortcut-dialog/shortcut-dialog";
+import NavBar from "../../components/navbar/navbar";
+import SelectionView from "../../components/selection-view/selection-view";
+import ShortcutDialog from "../../components/shortcut-dialog/shortcut-dialog";
 
 /* ===================== *\
     # View User Selections
