@@ -36,23 +36,15 @@
 //   }
 // }
 
-// declare global {
-//     namespace Cypress {
-//         interface Chainable {
-//             getByTestId: (selector: string) => Chainable<Element>;
-//         }
-//     }
-// }
-
 declare namespace Cypress {
     interface Chainable {
-        getByTestId: (selector: string) => Chainable<any>;
+        getByTestId(selector: string): Cypress.Chainable<JQuery<HTMLElement>>;
     }
 }
 
 Cypress.Commands.add(
     "getByTestId",
-    function (selector: string): Cypress.Chainable<any> {
+    function (selector: string): Cypress.Chainable<JQuery<HTMLElement>> {
         return cy.get(`[data-testid=${selector}]`);
     }
 );

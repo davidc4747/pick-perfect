@@ -62,6 +62,7 @@ export default function NavBar(props: PropTypes) {
                     "all" === value ? navItemSelected : "",
                 ].join(" ")}
                 onClick={() => onChange("all")}
+                data-testid="position-default"
                 aria-label={`View all lanes selections`}
             >
                 <Icon name="house-solid" />

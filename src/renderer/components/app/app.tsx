@@ -9,13 +9,12 @@ import {
     UserSelectionType,
     ChampionSelectPhase,
 } from "../../../shared/types";
-// import Dashboard from "../../pages/dashboard/dashboard";
 import ViewUserSelections from "../view-user-selections/view-user-selections";
 import SelectChamp from "../../pages/select-champ/select-champ";
 
 declare const electron: {
-    updateSelections: (data: UserSelections) => void;
-    getSelections: () => Promise<UserSelections>;
+    updateSelections(data: UserSelections): void;
+    getSelections(): Promise<UserSelections>;
 };
 
 /* ===================== *\

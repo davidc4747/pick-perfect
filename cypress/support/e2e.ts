@@ -14,7 +14,57 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import "./commands";
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+import { UserSelections } from "../../src/shared/types";
+
+Cypress.on("window:before:load", (win) => {
+    let model: UserSelections = {
+        all: {
+            ban: [],
+            hover: [],
+            pick: [],
+        },
+
+        top: {
+            ban: [],
+            hover: [],
+            pick: [],
+        },
+
+        jungle: {
+            ban: [],
+            hover: [],
+            pick: [],
+        },
+
+        middle: {
+            ban: [],
+            hover: [],
+            pick: [],
+        },
+
+        bottom: {
+            ban: [202, 81, 236],
+            hover: [],
+            pick: [],
+        },
+
+        utility: {
+            ban: [412, 350, 117],
+            hover: [],
+            pick: [],
+        },
+    };
+    win.electron = {
+        updateSelections: (data: UserSelections): void => {
+            model = data;
+        },
+        getSelections(): Promise<UserSelections> {
+            return Promise.resolve(model);
+        },
+    };
+});
