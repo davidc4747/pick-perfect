@@ -1,4 +1,5 @@
 import React, { useEffect, useReducer } from "react";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import styles from "./app.module.css";
 import {
     INITIAL_USER_SELECTION,
@@ -11,6 +12,7 @@ import {
 } from "../../../shared/types";
 import ViewUserSelections from "../../pages/view-user-selections/view-user-selections";
 import SelectChamp from "../../pages/select-champ/select-champ";
+import Settings from "../../pages/settings/settings";
 
 declare const electron: {
     updateSelections(data: UserSelections): void;
@@ -232,10 +234,13 @@ export default function App() {
         #Render
     \* ------------------------- */
 
-    function renderSelectedPage() {
-        switch (state.currentPage) {
-            case Page.ViewUserSelections:
                 return (
+        <section className={styles.app}>
+            <HashRouter>
+                <Routes>
+                    <Route
+                        path="/"
+                        element={
                     <ViewUserSelections
                         currentTab={state.curentUserSelection}
                         selections={state.selections}
@@ -255,34 +260,22 @@ export default function App() {
                         startChampionSelection={startChampionSelection}
                         moveChampion={moveChampion}
                     />
-                );
+                        }
+                    />
 
-            case Page.SelectChampion:
-                return (
+                    <Route
+                        path="/select"
+                        element={
                     <SelectChamp
                         onChampionSelected={championSelected}
                         onCancel={cancelChampionSelect}
                     />
-                );
-
-            case Page.Settings:
-                return (
-                    <section>
-                        <button
-                            onClick={() =>
-                                dispatch({
-                                    type: AppActionType.ChangePage,
-                                    page: Page.ViewUserSelections,
-                                })
                             }
-                        >
-                            Home
-                        </button>
-                        <h1>Settings Page!</h1>
+                    />
+
+                    <Route path="/select" element={<Settings />} />
+                </Routes>
+            </HashRouter>
                     </section>
                 );
-        }
-    }
-
-    return <section className={styles.app}>{renderSelectedPage()}</section>;
 }
