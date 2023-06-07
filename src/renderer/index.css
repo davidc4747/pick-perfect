@@ -122,6 +122,7 @@ a:focus {
     #Form
 \* ======================== */
 
+.btn,
 button {
     padding: 0.6rem 1rem;
     cursor: pointer;
@@ -130,13 +131,51 @@ button {
     background-color: var(--secondaryColor);
     border: 1px solid var(--secondaryColor);
 
-    transition: 0.25s ease-out color;
+    transition: 0.25s ease-out color, 0.25s ease-out border,
+        0.25s ease-out background-color;
 }
-button:hover,
+.btn:hover,
+.btn:focus button:hover,
 button:focus {
     color: var(--white);
     border: 1px solid var(--primaryColor);
     outline: none;
+}
+
+/* ------------------------- *\
+    #Submit button
+\* ------------------------- */
+
+.btn--primary {
+    font-weight: bold;
+    color: var(--secondaryColor);
+    background-color: var(--primaryColor);
+}
+.btn--primary:hover,
+.btn--primary:focus {
+    border: 1px solid var(--white);
+    color: var(--black);
+}
+
+/* ------------------------- *\
+    #Dropdown
+\* ------------------------- */
+
+.select {
+    padding: 0.3rem 0.4rem;
+    cursor: pointer;
+
+    color: var(--textColor);
+    background-color: var(--secondaryColor);
+    border: 1px solid var(--secondaryColor);
+
+    transition: 0.25s ease-out color, 0.25s ease-out border,
+        0.25s ease-out background-color;
+}
+.select:hover,
+.select:focus {
+    color: var(--white);
+    border: 1px solid var(--primaryColor);
 }
 
 /* ------------------------- *\

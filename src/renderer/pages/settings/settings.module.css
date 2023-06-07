@@ -3,8 +3,24 @@
 \* ===================== */
 
 .settings {
+    padding-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.settings > label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.home {
-    padding: 0.6rem 1rem;
+.header {
+    margin: 0;
+}
+
+.buttonGroup {
+    align-self: flex-end;
+
+    display: flex;
+    gap: 1rem;
 }
