@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-// import { settings } from "./settings.module.css";
+import { home } from "./settings.module.css";
 
 /* ===================== *\
     # Settings
@@ -14,7 +14,9 @@ export default function Settings(props: PropTypes): React.ReactElement {
 
     return (
         <>
-            <Link to="/">Home</Link>
+            <Link className={home} to="/">
+                Home
+            </Link>
             <h1>Settings Page!</h1>
         </>
     );

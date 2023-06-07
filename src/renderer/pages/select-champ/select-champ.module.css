@@ -3,7 +3,9 @@
 \* ===================== */
 
 .cancelButton {
+    padding: 0.6rem 1rem;
     margin: 0.8rem 0;
+    margin-right: auto;
 }
 
 .searchbar {

@@ -59,6 +59,12 @@ html {
 
     color: var(--textColor);
     background-color: var(--background);
+
+    /* Just use the fonts from tailwind [DC] */
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
 }
 
 ul {
@@ -85,6 +91,31 @@ h4 {
 }
 h5 {
     font-size: var(--header5);
+}
+
+/* ======================== *\
+    #Links
+\* ======================== */
+
+a {
+    display: inline-flex;
+    align-items: center;
+    text-align: center;
+
+    text-decoration: none;
+
+    color: var(--textColor);
+    background-color: var(--secondaryColor);
+    border: 1px solid var(--secondaryColor);
+
+    transition: 0.25s ease-out color;
+}
+
+a:hover,
+a:focus {
+    color: var(--white);
+    border: 1px solid var(--primaryColor);
+    outline: none;
 }
 
 /* ======================== *\
