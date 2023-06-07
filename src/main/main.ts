@@ -9,9 +9,10 @@ import {
     IpcMainEvent,
 } from "electron";
 import { listenToRiotEvents } from "./services/auto-script";
-import { UserSelections } from "../shared/types";
+import { Settings, UserSelections } from "../shared/types";
 import { updateSelections, getAllSelections } from "./services/userSelections";
 import { readUserData, saveUserData } from "./services/userSavedData";
+import { readUserSettings, saveUserSettings } from "./services/settingsService";
 
 /* ======================== *\
     #App
@@ -47,13 +48,21 @@ async function closeApp() {
 
 ipcMain.on(
     "updateSelections",
-    function (event: IpcMainEvent, data: UserSelections) {
+    function (_: IpcMainEvent, data: UserSelections) {
         updateSelections(data);
     }
 );
 
-ipcMain.handle("getSelections", function () {
+ipcMain.handle("getSelections", function (): UserSelections {
     return getAllSelections();
+});
+
+ipcMain.on("updateSettings", function (_: IpcMainEvent, data: Settings) {
+    saveUserSettings(app, data);
+});
+
+ipcMain.handle("getSettings", async function (): Promise<Settings> {
+    return await readUserSettings(app);
 });
 
 /* ======================== *\

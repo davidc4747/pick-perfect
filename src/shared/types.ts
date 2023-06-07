@@ -25,3 +25,13 @@ export interface RoleSelections {
 }
 
 export type SelectionPhase = "ban" | "hover" | "pick";
+
+/* ======================== *\
+    #Settings
+\* ======================== */
+
+export type Settings = {
+    accecptReadyCheck: boolean;
+    requeue: boolean;
+    smiteKey: "none" | "D" | "F";
+};

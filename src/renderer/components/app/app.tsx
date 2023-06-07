@@ -9,6 +9,7 @@ import {
     UserSelections,
     SelectionGroup,
     SelectionPhase,
+    Settings as SettingData,
 } from "../../../shared/types";
 import ViewUserSelections from "../../pages/view-user-selections/view-user-selections";
 import SelectChamp from "../../pages/select-champ/select-champ";
@@ -17,6 +18,9 @@ import Settings from "../../pages/settings/settings";
 declare const electron: {
     updateSelections(data: UserSelections): void;
     getSelections(): Promise<UserSelections>;
+
+    updateSettings(data: SettingData): void;
+    getSettings(): Promise<SettingData>;
 };
 
 /* ===================== *\
