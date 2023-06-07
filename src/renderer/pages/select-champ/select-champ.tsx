@@ -1,4 +1,5 @@
 import { useState, useRef, ChangeEvent } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import {
     cancelButton,
     searchbar,
@@ -7,6 +8,7 @@ import {
     champList,
     championItem,
 } from "./select-champ.module.css";
+import { UserSelectionType, ChampionSelectPhase } from "../../../shared/types";
 import { getChampionList } from "../../services/championData";
 import { ChampionData } from "../../services/championData";
 import { useKeyBinds } from "../../services/useKeyBinds";
@@ -18,12 +20,22 @@ import ShortcutDialog from "../../components/shortcut-dialog/shortcut-dialog";
 \* ===================== */
 
 interface PropTypes {
-    onChampionSelected(id: number): void;
-    onCancel(): void;
+    onSelect(
+        role: UserSelectionType | undefined,
+        phase: ChampionSelectPhase | undefined,
+        id: number
+    ): void;
 }
 
+type Params = {
+    role?: UserSelectionType;
+    phase?: ChampionSelectPhase;
+};
+
 export default function SelectChamp(props: PropTypes) {
-    const { onChampionSelected, onCancel } = props;
+    const navigate = useNavigate();
+    const { role, phase } = useParams<Params>();
+    const { onSelect } = props;
     const [searchString, setSearchString] = useState<string>("");
 
     const filterChampionList = getChampionList().filter((champ) =>
@@ -37,7 +49,7 @@ export default function SelectChamp(props: PropTypes) {
     const dialogRef = useRef<HTMLDialogElement>(null);
     useKeyBinds({
         Escape() {
-            onCancel();
+            navigate("/");
         },
         "?"() {
             dialogRef.current?.showModal();
@@ -47,11 +59,20 @@ export default function SelectChamp(props: PropTypes) {
         },
     });
 
+    function selectAndRedirect(
+        role: UserSelectionType | undefined,
+        phase: ChampionSelectPhase | undefined,
+        id: number
+    ): void {
+        onSelect(role, phase, id);
+        navigate("/");
+    }
+
     function handleEnter(e: React.KeyboardEvent<HTMLInputElement>) {
         // If they press enter while the Searchbar is Focused
         if (e.key === "Enter" && filterChampionList.length === 1) {
             const [champ] = filterChampionList;
-            onChampionSelected(champ.id);
+            selectAndRedirect(role, phase, champ.id);
         }
     }
 
@@ -65,14 +86,14 @@ export default function SelectChamp(props: PropTypes) {
                     ["Escape", "Cancel Champion Select"],
                 ]}
             />
-            <button
+            <Link
                 data-testid="btn-cancel"
                 className={cancelButton}
-                onClick={onCancel}
                 aria-label="Cancel Champion Select"
+                to="/"
             >
                 Cancel
-            </button>
+            </Link>
 
             <section className={searchbar}>
                 <input
@@ -113,7 +134,9 @@ export default function SelectChamp(props: PropTypes) {
                             data-testid={`add-champion-${champ.id}`}
                             title={`Select ${champ.name}`}
                             aria-label={`Select ${champ.name}`}
-                            onClick={() => onChampionSelected(champ.id)}
+                            onClick={() =>
+                                selectAndRedirect(role, phase, champ.id)
+                            }
                         />
                     </li>
                 ))}

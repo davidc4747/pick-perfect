@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styles, { selectionItem } from "./selection-view.module.css";
 import { getChampionMap } from "../../services/championData";
 import {
@@ -16,7 +17,6 @@ interface PropTypes {
     currentTab: UserSelectionType;
     phase: ChampionSelectPhase;
     selection: UserSelections;
-    onAddChampion(type: ChampionSelectPhase): void;
     onRemoveChampion(phase: ChampionSelectPhase, championId: number): void;
     onMoveChampion(
         phase: ChampionSelectPhase,
@@ -31,7 +31,6 @@ export default function SelectionView(props: PropTypes) {
         currentTab,
         phase,
         selection,
-        onAddChampion,
         onRemoveChampion,
         onMoveChampion,
         viewAllTab,
@@ -138,13 +137,13 @@ export default function SelectionView(props: PropTypes) {
                         )
                     }
                 >
-                    <button
+                    <Link
                         className={styles.addButton}
-                        onClick={() => onAddChampion(phase)}
+                        to={`/select/${currentTab}/${phase}`}
                         aria-label={`Add Champion to your ${getTitle(phase)}`}
                     >
                         Add Champion
-                    </button>
+                    </Link>
                 </Droppable>
             </section>
         </>

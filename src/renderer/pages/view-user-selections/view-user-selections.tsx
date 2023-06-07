@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import {
     ChampionSelectPhase,
     UserSelectionType,
@@ -17,9 +18,7 @@ interface PropTypes {
     selections: UserSelections;
     currentTab: UserSelectionType;
     onTabChange(tab: UserSelectionType): void;
-    onSettingsOpened(): void;
     onRemoveChampion(phase: ChampionSelectPhase, championId: number): void;
-    startChampionSelection(phase: ChampionSelectPhase): void;
     moveChampion(
         phase: ChampionSelectPhase,
         oldIndex: number,
@@ -30,13 +29,12 @@ interface PropTypes {
 export default function ViewUserSelections(
     props: PropTypes
 ): React.ReactElement {
+    const navigate = useNavigate();
     const {
         currentTab,
         selections,
         onTabChange,
-        onSettingsOpened,
         onRemoveChampion,
-        startChampionSelection,
         moveChampion,
     } = props;
     const viewAllTab = () => onTabChange("all");
@@ -48,7 +46,7 @@ export default function ViewUserSelections(
             dialogRef.current?.showModal();
         },
         s() {
-            onSettingsOpened();
+            navigate("/settings");
         },
         F1: () => onTabChange("all"),
         F2: () => onTabChange("top"),
@@ -70,37 +68,30 @@ export default function ViewUserSelections(
                     ["Left/Right Arrow Keys", "Reorder Champions"],
                 ]}
             />
-            <NavBar
-                value={currentTab}
-                onChange={onTabChange}
-                onSettingsOpened={onSettingsOpened}
-            />
+            <NavBar value={currentTab} onChange={onTabChange} />
 
             <SelectionView
                 currentTab={currentTab}
                 phase="pick"
                 selection={selections}
-                onAddChampion={startChampionSelection}
-                onMoveChampion={moveChampion}
                 onRemoveChampion={onRemoveChampion}
+                onMoveChampion={moveChampion}
                 viewAllTab={viewAllTab}
             />
             <SelectionView
                 currentTab={currentTab}
                 phase="ban"
                 selection={selections}
-                onAddChampion={startChampionSelection}
-                onMoveChampion={moveChampion}
                 onRemoveChampion={onRemoveChampion}
+                onMoveChampion={moveChampion}
                 viewAllTab={viewAllTab}
             />
             <SelectionView
                 currentTab={currentTab}
                 phase="hover"
                 selection={selections}
-                onAddChampion={startChampionSelection}
-                onMoveChampion={moveChampion}
                 onRemoveChampion={onRemoveChampion}
+                onMoveChampion={moveChampion}
                 viewAllTab={viewAllTab}
             />
         </>

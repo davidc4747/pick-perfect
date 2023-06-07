@@ -5,6 +5,7 @@ import {
     settingsBtn,
 } from "./navbar.module.css";
 import { UserSelectionType } from "../../../shared/types";
+import { Link } from "react-router-dom";
 import Icon from "../icon/icon";
 
 /* ===================== *\
@@ -48,11 +49,10 @@ const positionList: PositionItem[] = [
 interface PropTypes {
     value: UserSelectionType;
     onChange(selectionType: UserSelectionType): void;
-    onSettingsOpened(): void;
 }
 
 export default function NavBar(props: PropTypes) {
-    const { value, onChange, onSettingsOpened } = props;
+    const { value, onChange } = props;
 
     return (
         <nav className={navbar}>
@@ -83,14 +83,14 @@ export default function NavBar(props: PropTypes) {
                 </button>
             ))}
 
-            <button
+            <Link
                 data-testid={`btn-settings`}
                 className={[navItem, settingsBtn].join(" ")}
-                onClick={onSettingsOpened}
                 aria-label="Open Settings"
+                to="/settings"
             >
                 <Icon name="gear-solid" />
-            </button>
+            </Link>
         </nav>
     );
 }

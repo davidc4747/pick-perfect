@@ -45,20 +45,20 @@ export const INITIAL_USER_SELECTION: UserSelections = {
 type UserSelectionAction =
     | {
           type: "ADD";
-          selectionType: UserSelectionType;
+          group: UserSelectionType;
           phase: ChampionSelectPhase;
           championId: number;
       }
     | {
           type: "CHANGE_ORDER";
-          selectionType: UserSelectionType;
+          group: UserSelectionType;
           phase: ChampionSelectPhase;
           oldIndex: number;
           newIndex: number;
       }
     | {
           type: "REMOVE";
-          selectionType: UserSelectionType;
+          group: UserSelectionType;
           phase: ChampionSelectPhase;
           championId: number;
       };
@@ -69,17 +69,14 @@ export function selectionReducer(
 ): UserSelections {
     switch (action.type) {
         case "ADD": {
-            const { selectionType, phase, championId } = action;
+            const { group, phase, championId } = action;
             // Only add Unique Values
-            if (!selections[selectionType][phase]?.includes(championId ?? -1)) {
+            if (!selections[group][phase]?.includes(championId ?? -1)) {
                 return {
                     ...selections,
-                    [selectionType]: {
-                        ...selections[selectionType],
-                        [phase]: [
-                            ...selections[selectionType][phase],
-                            championId,
-                        ],
+                    [group]: {
+                        ...selections[group],
+                        [phase]: [...selections[group][phase], championId],
                     },
                 };
             } else {
@@ -88,12 +85,12 @@ export function selectionReducer(
         }
 
         case "REMOVE": {
-            const { selectionType, phase, championId } = action;
+            const { group, phase, championId } = action;
             return {
                 ...selections,
-                [selectionType]: {
-                    ...selections[selectionType],
-                    [phase]: selections[selectionType][phase].filter(
+                [group]: {
+                    ...selections[group],
+                    [phase]: selections[group][phase].filter(
                         (id) => id !== championId
                     ),
                 },
@@ -101,8 +98,8 @@ export function selectionReducer(
         }
 
         case "CHANGE_ORDER": {
-            const { selectionType, phase } = action;
-            const phaseSelections = selections[selectionType][phase];
+            const { group, phase } = action;
+            const phaseSelections = selections[group][phase];
 
             const oldIndex = Math.max(
                 Math.min(action.oldIndex, phaseSelections.length - 1),
@@ -120,8 +117,8 @@ export function selectionReducer(
 
             return {
                 ...selections,
-                [selectionType]: {
-                    ...selections[selectionType],
+                [group]: {
+                    ...selections[group],
                     [phase]: phaseSelections,
                 },
             };

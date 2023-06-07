@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 // import { settings } from "./settings.module.css";
 
 /* ===================== *\
@@ -13,16 +14,7 @@ export default function Settings(props: PropTypes): React.ReactElement {
 
     return (
         <>
-            <button
-                onClick={() =>
-                    dispatch({
-                        type: AppActionType.ChangePage,
-                        page: Page.ViewUserSelections,
-                    })
-                }
-            >
-                Home
-            </button>
+            <Link to="/">Home</Link>
             <h1>Settings Page!</h1>
         </>
     );

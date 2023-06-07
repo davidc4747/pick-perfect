@@ -23,33 +23,20 @@ declare const electron: {
     # App
 \* ===================== */
 
-enum Page {
-    ViewUserSelections,
-    SelectChampion,
-    Settings,
-}
-
 interface AppState {
-    currentPage: Page;
-
     selections: UserSelections;
-    curentUserSelection: UserSelectionType;
-    selectedPhase: ChampionSelectPhase | null;
+    currentTab: UserSelectionType;
 }
 
 const initialState: AppState = {
-    currentPage: Page.ViewUserSelections,
-
     selections: INITIAL_USER_SELECTION,
-    curentUserSelection: "all",
-    selectedPhase: null,
+    currentTab: "all",
 };
 
 type AppAction =
-    | { type: AppActionType.ChangePage; page: Page }
     | {
-          type: AppActionType.ChangeUserSelectionType;
-          changeUserSelectionType: UserSelectionType;
+          type: AppActionType.ChangeTab;
+          tab: UserSelectionType;
       }
     | {
           type: AppActionType.InitializeSelection;
@@ -67,42 +54,34 @@ type AppAction =
           championId: number;
       }
     | {
-          type: AppActionType.StartChampionSelect;
-          phase: ChampionSelectPhase;
-      }
-    | { type: AppActionType.ChampionSelected; championId: number }
-    | { type: AppActionType.CancelChampionSelect };
+          type: AppActionType.AddChampion;
+          group: UserSelectionType | undefined;
+          phase: ChampionSelectPhase | undefined;
+          championId: number;
+      };
 
 enum AppActionType {
-    ChangePage = "CHANGE_PAGE",
-    ChangeUserSelectionType = "CHANGE_USER_SELECTION_TYPE",
-
     InitializeSelection = "INITIALIZE_SELECTIONS",
-    StartChampionSelect = "START_CHAMPION_SELECT",
-    ChampionSelected = "CHAMPION_SELECTED",
-    CancelChampionSelect = "CANCEL_CHAMPION_SELECT",
+
+    ChangeTab = "ChangeTab",
+
+    AddChampion = "ADD_CHAMPION",
     RemoveChampion = "REMOVE_CHAMPION",
     SortChampion = "SORT_CHAMPION",
 }
 
 function reducer(state: AppState, action: AppAction): AppState {
     switch (action.type) {
-        case AppActionType.ChangePage:
-            return {
-                ...state,
-                currentPage: action.page ?? state.currentPage,
-            };
-        case AppActionType.ChangeUserSelectionType:
-            return {
-                ...state,
-                curentUserSelection:
-                    action.changeUserSelectionType ?? state.curentUserSelection,
-            };
-
         case AppActionType.InitializeSelection:
             return {
                 ...state,
                 selections: action.selections,
+            };
+
+        case AppActionType.ChangeTab:
+            return {
+                ...state,
+                currentTab: action.tab ?? state.currentTab,
             };
 
         case AppActionType.SortChampion:
@@ -112,7 +91,7 @@ function reducer(state: AppState, action: AppAction): AppState {
                 // Update User Selection
                 selections: selectionReducer(state.selections, {
                     type: "CHANGE_ORDER",
-                    selectionType: state.curentUserSelection,
+                    group: state.currentTab,
                     phase: action.phase,
                     oldIndex: action.oldIndex,
                     newIndex: action.newIndex,
@@ -126,49 +105,29 @@ function reducer(state: AppState, action: AppAction): AppState {
                 // Update User Selection
                 selections: selectionReducer(state.selections, {
                     type: "REMOVE",
-                    selectionType: state.curentUserSelection,
+                    group: state.currentTab,
                     phase: action.phase,
                     championId: action.championId,
                 }),
             };
 
-        case AppActionType.StartChampionSelect:
-            return {
-                ...state,
-                // Switch the Page
-                currentPage: Page.SelectChampion,
-
-                // Setup the selectedPhase
-                selectedPhase: action.phase,
-            };
-
-        case AppActionType.ChampionSelected:
-            if (state.selectedPhase) {
+        case AppActionType.AddChampion: {
+            if (action.group && action.phase) {
                 return {
                     ...state,
-
-                    // Go Back to View Page. Reset the selectedPhase
-                    currentPage: Page.ViewUserSelections,
-                    selectedPhase: null,
 
                     // Update User Selection
                     selections: selectionReducer(state.selections, {
                         type: "ADD",
-                        selectionType: state.curentUserSelection,
-                        phase: state.selectedPhase,
+                        group: action.group,
+                        phase: action.phase,
                         championId: action.championId,
                     }),
                 };
             } else {
                 return { ...state }; // Invalid state, Do nothing
             }
-
-        case AppActionType.CancelChampionSelect:
-            return {
-                ...state,
-                currentPage: Page.ViewUserSelections,
-                selectedPhase: null,
-            };
+        }
     }
 }
 
@@ -194,6 +153,13 @@ export default function App() {
         #Bind Actions
     \* ------------------------- */
 
+    function handleTabChange(tab: UserSelectionType) {
+        dispatch({
+            type: AppActionType.ChangeTab,
+            tab: tab,
+        });
+    }
+
     function removeChampion(phase: ChampionSelectPhase, championId: number) {
         dispatch({
             type: AppActionType.RemoveChampion,
@@ -215,67 +181,48 @@ export default function App() {
         });
     }
 
-    function startChampionSelection(phase: ChampionSelectPhase) {
+    function addChampion(
+        role: UserSelectionType | undefined,
+        phase: ChampionSelectPhase | undefined,
+        id: number
+    ): void {
         dispatch({
-            type: AppActionType.StartChampionSelect,
+            type: AppActionType.AddChampion,
+            group: role,
             phase,
+            championId: id,
         });
-    }
-
-    function championSelected(championId: number) {
-        dispatch({ type: AppActionType.ChampionSelected, championId });
-    }
-
-    function cancelChampionSelect() {
-        dispatch({ type: AppActionType.CancelChampionSelect });
     }
 
     /* ------------------------- *\
         #Render
     \* ------------------------- */
 
-                return (
+    return (
         <section className={styles.app}>
             <HashRouter>
                 <Routes>
                     <Route
                         path="/"
                         element={
-                    <ViewUserSelections
-                        currentTab={state.curentUserSelection}
-                        selections={state.selections}
-                        onTabChange={(tab: UserSelectionType) =>
-                            dispatch({
-                                type: AppActionType.ChangeUserSelectionType,
-                                changeUserSelectionType: tab,
-                            })
-                        }
-                        onSettingsOpened={() =>
-                            dispatch({
-                                type: AppActionType.ChangePage,
-                                page: Page.Settings,
-                            })
-                        }
-                        onRemoveChampion={removeChampion}
-                        startChampionSelection={startChampionSelection}
-                        moveChampion={moveChampion}
-                    />
+                            <ViewUserSelections
+                                currentTab={state.currentTab}
+                                selections={state.selections}
+                                onTabChange={handleTabChange}
+                                onRemoveChampion={removeChampion}
+                                moveChampion={moveChampion}
+                            />
                         }
                     />
 
                     <Route
-                        path="/select"
-                        element={
-                    <SelectChamp
-                        onChampionSelected={championSelected}
-                        onCancel={cancelChampionSelect}
-                    />
-                            }
+                        path="/select/:role/:phase"
+                        element={<SelectChamp onSelect={addChampion} />}
                     />
 
-                    <Route path="/select" element={<Settings />} />
+                    <Route path="/settings" element={<Settings />} />
                 </Routes>
             </HashRouter>
-                    </section>
-                );
+        </section>
+    );
 }
