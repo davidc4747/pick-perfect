@@ -3,8 +3,8 @@ import styles, { selectionItem } from "./selection-view.module.css";
 import { getChampionMap } from "../../services/championData";
 import {
     UserSelections,
-    UserSelectionType,
-    ChampionSelectPhase,
+    SelectionGroup,
+    SelectionPhase,
 } from "../../../shared/types";
 import Droppable from "../dragdrop/droppable";
 import DragNDrop from "../dragdrop/dragndrop";
@@ -14,12 +14,12 @@ import DragNDrop from "../dragdrop/dragndrop";
 \* ===================== */
 
 interface PropTypes {
-    currentTab: UserSelectionType;
-    phase: ChampionSelectPhase;
+    currentTab: SelectionGroup;
+    phase: SelectionPhase;
     selection: UserSelections;
-    onRemoveChampion(phase: ChampionSelectPhase, championId: number): void;
+    onRemoveChampion(phase: SelectionPhase, championId: number): void;
     onMoveChampion(
-        phase: ChampionSelectPhase,
+        phase: SelectionPhase,
         oldIndex: number,
         newIndex: number
     ): void;
@@ -154,7 +154,7 @@ export default function SelectionView(props: PropTypes) {
     #Helpers
 \* ------------------------- */
 
-function getTitle(type: ChampionSelectPhase): string {
+function getTitle(type: SelectionPhase): string {
     switch (type) {
         case "hover":
             return "Hover";

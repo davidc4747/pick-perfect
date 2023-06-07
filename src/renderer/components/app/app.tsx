@@ -7,8 +7,8 @@ import {
 } from "../../services/selectionReducer";
 import {
     UserSelections,
-    UserSelectionType,
-    ChampionSelectPhase,
+    SelectionGroup,
+    SelectionPhase,
 } from "../../../shared/types";
 import ViewUserSelections from "../../pages/view-user-selections/view-user-selections";
 import SelectChamp from "../../pages/select-champ/select-champ";
@@ -25,7 +25,7 @@ declare const electron: {
 
 interface AppState {
     selections: UserSelections;
-    currentTab: UserSelectionType;
+    currentTab: SelectionGroup;
 }
 
 const initialState: AppState = {
@@ -36,7 +36,7 @@ const initialState: AppState = {
 type AppAction =
     | {
           type: AppActionType.ChangeTab;
-          tab: UserSelectionType;
+          tab: SelectionGroup;
       }
     | {
           type: AppActionType.InitializeSelection;
@@ -44,19 +44,19 @@ type AppAction =
       }
     | {
           type: AppActionType.SortChampion;
-          phase: ChampionSelectPhase;
+          phase: SelectionPhase;
           oldIndex: number;
           newIndex: number;
       }
     | {
           type: AppActionType.RemoveChampion;
-          phase: ChampionSelectPhase;
+          phase: SelectionPhase;
           championId: number;
       }
     | {
           type: AppActionType.AddChampion;
-          group: UserSelectionType | undefined;
-          phase: ChampionSelectPhase | undefined;
+          group: SelectionGroup | undefined;
+          phase: SelectionPhase | undefined;
           championId: number;
       };
 
@@ -153,14 +153,14 @@ export default function App() {
         #Bind Actions
     \* ------------------------- */
 
-    function handleTabChange(tab: UserSelectionType) {
+    function handleTabChange(tab: SelectionGroup) {
         dispatch({
             type: AppActionType.ChangeTab,
             tab: tab,
         });
     }
 
-    function removeChampion(phase: ChampionSelectPhase, championId: number) {
+    function removeChampion(phase: SelectionPhase, championId: number) {
         dispatch({
             type: AppActionType.RemoveChampion,
             phase: phase,
@@ -169,7 +169,7 @@ export default function App() {
     }
 
     function moveChampion(
-        phase: ChampionSelectPhase,
+        phase: SelectionPhase,
         oldIndex: number,
         newIndex: number
     ) {
@@ -182,8 +182,8 @@ export default function App() {
     }
 
     function addChampion(
-        role: UserSelectionType | undefined,
-        phase: ChampionSelectPhase | undefined,
+        role: SelectionGroup | undefined,
+        phase: SelectionPhase | undefined,
         id: number
     ): void {
         dispatch({

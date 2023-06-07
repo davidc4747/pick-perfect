@@ -8,7 +8,7 @@ import {
     champList,
     championItem,
 } from "./select-champ.module.css";
-import { UserSelectionType, ChampionSelectPhase } from "../../../shared/types";
+import { SelectionGroup, SelectionPhase } from "../../../shared/types";
 import { getChampionList } from "../../services/championData";
 import { ChampionData } from "../../services/championData";
 import { useKeyBinds } from "../../services/useKeyBinds";
@@ -21,15 +21,15 @@ import ShortcutDialog from "../../components/shortcut-dialog/shortcut-dialog";
 
 interface PropTypes {
     onSelect(
-        role: UserSelectionType | undefined,
-        phase: ChampionSelectPhase | undefined,
+        role: SelectionGroup | undefined,
+        phase: SelectionPhase | undefined,
         id: number
     ): void;
 }
 
 type Params = {
-    role?: UserSelectionType;
-    phase?: ChampionSelectPhase;
+    role?: SelectionGroup;
+    phase?: SelectionPhase;
 };
 
 export default function SelectChamp(props: PropTypes) {
@@ -60,8 +60,8 @@ export default function SelectChamp(props: PropTypes) {
     });
 
     function selectAndRedirect(
-        role: UserSelectionType | undefined,
-        phase: ChampionSelectPhase | undefined,
+        role: SelectionGroup | undefined,
+        phase: SelectionPhase | undefined,
         id: number
     ): void {
         onSelect(role, phase, id);

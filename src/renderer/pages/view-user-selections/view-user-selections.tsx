@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-    ChampionSelectPhase,
-    UserSelectionType,
+    SelectionPhase,
+    SelectionGroup,
     UserSelections,
 } from "../../../shared/types";
 import { useKeyBinds } from "../../services/useKeyBinds";
@@ -16,11 +16,11 @@ import ShortcutDialog from "../../components/shortcut-dialog/shortcut-dialog";
 
 interface PropTypes {
     selections: UserSelections;
-    currentTab: UserSelectionType;
-    onTabChange(tab: UserSelectionType): void;
-    onRemoveChampion(phase: ChampionSelectPhase, championId: number): void;
+    currentTab: SelectionGroup;
+    onTabChange(tab: SelectionGroup): void;
+    onRemoveChampion(phase: SelectionPhase, championId: number): void;
     moveChampion(
-        phase: ChampionSelectPhase,
+        phase: SelectionPhase,
         oldIndex: number,
         newIndex: number
     ): void;

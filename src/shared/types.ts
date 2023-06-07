@@ -2,7 +2,7 @@
     #User Config
 \* ======================== */
 
-export type UserSelectionType =
+export type SelectionGroup =
     | "all"
     | "top"
     | "jungle"
@@ -24,4 +24,4 @@ export interface RoleSelections {
     pick: number[];
 }
 
-export type ChampionSelectPhase = "ban" | "hover" | "pick";
+export type SelectionPhase = "ban" | "hover" | "pick";

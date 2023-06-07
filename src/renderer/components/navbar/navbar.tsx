@@ -4,7 +4,7 @@ import {
     navItemSelected,
     settingsBtn,
 } from "./navbar.module.css";
-import { UserSelectionType } from "../../../shared/types";
+import { SelectionGroup } from "../../../shared/types";
 import { Link } from "react-router-dom";
 import Icon from "../icon/icon";
 
@@ -14,7 +14,7 @@ import Icon from "../icon/icon";
 
 interface PositionItem {
     displayName: string;
-    tag: UserSelectionType;
+    tag: SelectionGroup;
     image: string;
 }
 
@@ -47,8 +47,8 @@ const positionList: PositionItem[] = [
 ];
 
 interface PropTypes {
-    value: UserSelectionType;
-    onChange(selectionType: UserSelectionType): void;
+    value: SelectionGroup;
+    onChange(selectionType: SelectionGroup): void;
 }
 
 export default function NavBar(props: PropTypes) {

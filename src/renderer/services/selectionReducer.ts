@@ -1,7 +1,7 @@
 import {
     UserSelections,
-    UserSelectionType,
-    ChampionSelectPhase,
+    SelectionGroup,
+    SelectionPhase,
 } from "../../shared/types";
 
 export const INITIAL_USER_SELECTION: UserSelections = {
@@ -45,21 +45,21 @@ export const INITIAL_USER_SELECTION: UserSelections = {
 type UserSelectionAction =
     | {
           type: "ADD";
-          group: UserSelectionType;
-          phase: ChampionSelectPhase;
+          group: SelectionGroup;
+          phase: SelectionPhase;
           championId: number;
       }
     | {
           type: "CHANGE_ORDER";
-          group: UserSelectionType;
-          phase: ChampionSelectPhase;
+          group: SelectionGroup;
+          phase: SelectionPhase;
           oldIndex: number;
           newIndex: number;
       }
     | {
           type: "REMOVE";
-          group: UserSelectionType;
-          phase: ChampionSelectPhase;
+          group: SelectionGroup;
+          phase: SelectionPhase;
           championId: number;
       };
 
