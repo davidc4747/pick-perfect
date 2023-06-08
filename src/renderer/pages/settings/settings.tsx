@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { settings, header, buttonGroup } from "./settings.module.css";
 import { Settings as SettingData } from "../../../shared/types";
+import { useKeyBinds } from "../../services/useKeyBinds";
 
 declare const electron: {
     updateSettings(data: SettingData): void;
@@ -13,9 +14,23 @@ declare const electron: {
 \* ===================== */
 
 export default function Settings(): React.ReactElement {
+    const navigate = useNavigate();
     const [accecptReadyCheck, setAcceptRC] = useState(true);
     const [requeue, setRequeue] = useState(true);
     const [smiteKey, setSmiteKey] = useState<SettingData["smiteKey"]>("D");
+
+    useKeyBinds({
+        Escape() {
+            navigate("/");
+        },
+        Enter(e) {
+            // Ctrl + Enter will Submit the Changes
+            if (e.ctrlKey) {
+                handleSave();
+                navigate("/");
+            }
+        },
+    });
 
     function handleSave(): void {
         electron.updateSettings({
