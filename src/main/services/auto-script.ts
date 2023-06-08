@@ -70,8 +70,8 @@ async function setupEvents(): Promise<void> {
         // Get and up to date version of Settings
         const { shouldRequeue } = await readSettings();
         if (shouldRequeue) {
-            // await wait(300);
-            // await openRankedLobby();
+            await wait(300);
+            await openRankedLobby();
             await wait(300);
             await startMatchmaking();
         }

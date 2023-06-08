@@ -1,7 +1,7 @@
 import { getCredentials } from "./credentials";
 import WebSocket from "ws";
 
-enum MESSAGE_TYPES {
+enum MESSAGE_TYPE {
     WELCOME = 0,
     PREFIX = 1,
     CALL = 2,
@@ -41,7 +41,7 @@ export async function connect(): Promise<ConnectionStatus> {
         // Subscribe to ALL events, and handle any responses
         ws.on("open", function () {
             ws?.send(
-                JSON.stringify([MESSAGE_TYPES.SUBSCRIBE, "OnJsonApiEvent"])
+                JSON.stringify([MESSAGE_TYPE.SUBSCRIBE, "OnJsonApiEvent"])
             );
             ws?.on("message", handleMessage);
             resolve(["Connected"]);
@@ -69,10 +69,10 @@ export function onClose(callback: () => void) {
     #Events
 \* ------------------------- */
 
-type EventTypes = "CREATE" | "UPDATE" | "DELETE";
+type EventType = "Create" | "Update" | "Delete";
 
 interface Event {
-    eventType: EventTypes;
+    eventType: EventType[];
     uri: string;
     callback: (data: any) => void;
 }
@@ -83,33 +83,33 @@ export function clearEvents() {
 }
 
 export function onEvent(
-    eventType: EventTypes,
+    eventType: EventType | EventType[],
     uri: string,
     callback: (data: any) => void
 ) {
     eventList.push({
-        eventType,
+        eventType: Array.isArray(eventType) ? eventType : [eventType],
         uri,
         callback,
     });
 }
 
 type MessageResponse = [
-    opcode: string,
-    eventName: string,
-    data: { uri: string; eventType: EventTypes; data: any }
+    opcode: MESSAGE_TYPE,
+    eventName: string, // "OnJsonApiEvent"
+    resBody: { uri: string; eventType: EventType; data: any }
 ];
-function handleMessage(message: string) {
+function handleMessage(message: Buffer) {
     const resString = message.toString();
     if (resString) {
-        const res: MessageResponse = JSON.parse(resString);
+        const res = JSON.parse(resString) as MessageResponse;
         const data = res[2];
 
         // Notify any listeners that need to know about this WebSocket message
         for (const event of eventList) {
             if (
                 data.uri === event.uri.toLowerCase() &&
-                data.eventType.toUpperCase() === event.eventType.toUpperCase()
+                event.eventType.includes(data.eventType)
             ) {
                 event.callback(data.data);
             }

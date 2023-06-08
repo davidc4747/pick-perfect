@@ -7,7 +7,7 @@ import { onEvent } from "./internal/lcu-websocket";
 
 export function onMatchFound(callback: (data: any) => void): void {
     onEvent(
-        "UPDATE",
+        "Update",
         "/lol-lobby/v2/lobby/matchmaking/search-state",
         function (data: any) {
             // searchState = 'Searching' | 'Found' | 'Invalid'
@@ -22,7 +22,7 @@ export function onDodgerQueueFinished(callback: () => void): void {
     // NOTE: if you get Dodge Penalty Muliple times in a row,
     //      the error id will increment. so next time
     //      it will be /errors/2 and this event won't trigger [DC]
-    onEvent("DELETE", "/lol-matchmaking/v1/search/errors/1", callback);
+    onEvent("Delete", "/lol-matchmaking/v1/search/errors/1", callback);
 }
 
 /* ======================== *\
@@ -32,18 +32,18 @@ export function onDodgerQueueFinished(callback: () => void): void {
 export function onEnteredChampionSelect(
     callback: (data: ChampSelectSession) => void
 ): void {
-    onEvent("CREATE", "/lol-champ-select/v1/session", callback);
+    onEvent("Create", "/lol-champ-select/v1/session", callback);
 }
 
 export function onExitChampionSelect(
     callback: (data: ChampSelectSession) => void
 ): void {
-    onEvent("DELETE", "/lol-champ-select/v1/session", callback);
+    onEvent("Delete", "/lol-champ-select/v1/session", callback);
 }
 
 export function onHover(callback: (data: ChampSelectSession) => void): void {
     onEvent(
-        "CREATE",
+        "Create",
         "/lol-champ-select/v1/session",
         function (data: ChampSelectSession) {
             // there's some animations playing, just wait for them to finish
@@ -57,12 +57,12 @@ export function onPlayerBanAction(
 ): void {
     let hasTriggered = false;
     onEvent(
-        "CREATE",
+        "Create",
         "/lol-champ-select/v1/session",
         () => (hasTriggered = false)
     );
     onEvent(
-        "UPDATE",
+        "Update",
         "/lol-champ-select/v1/session",
         function (session: ChampSelectSession) {
             const { actions, timer, localPlayerCellId } = session;
@@ -94,12 +94,12 @@ export function onPlayerPickAction(
 ): void {
     let hasTriggered = false;
     onEvent(
-        "CREATE",
+        "Create",
         "/lol-champ-select/v1/session",
         () => (hasTriggered = false)
     );
     onEvent(
-        "UPDATE",
+        "Update",
         "/lol-champ-select/v1/session",
         function (session: ChampSelectSession) {
             const { actions, timer, localPlayerCellId } = session;
@@ -131,7 +131,7 @@ export function onPlayerPickChanged(
 ): void {
     let playerChampionId = 0;
     onEvent(
-        "UPDATE",
+        "Update",
         "/lol-champ-select/v1/session",
         function (session: ChampSelectSession) {
             const { actions, localPlayerCellId } = session;
@@ -155,7 +155,7 @@ export function onPlayerPickCompleted(
     callback: (playerChampionId: number, session: ChampSelectSession) => void
 ): void {
     onEvent(
-        "UPDATE",
+        "Update",
         "/lol-champ-select/v1/session",
         function (session: ChampSelectSession) {
             const { actions, localPlayerCellId } = session;
@@ -179,6 +179,20 @@ export function onPlayerPickCompleted(
 \* ======================== */
 
 export function onHonorCompleted(callback: (data: any) => void): void {
-    onEvent("CREATE", "/lol-honor-v2/v1/vote-completion", callback);
-    onEvent("CREATE", "/lol-honor-v2/v1/recognition-history", callback);
+    // /lol-honor-v2/v1/honor-player
+    // /lol-honor-v2/v1/recognition
+    let hasTriggered = false;
+    onEvent(
+        "Create",
+        "/lol-champ-select/v1/session",
+        () => (hasTriggered = false)
+    );
+    onEvent("Create", "/lol-honor-v2/v1/vote-completion", function (data) {
+        if (!hasTriggered) callback(data);
+        hasTriggered = true;
+    });
+    onEvent("Create", "/lol-honor-v2/v1/recognition-history", function (data) {
+        if (!hasTriggered) callback(data);
+        hasTriggered = true;
+    });
 }
