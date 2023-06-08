@@ -10,8 +10,8 @@ import {
 } from "electron";
 import { listenToRiotEvents } from "./services/auto-script";
 import { Settings, UserSelections } from "../shared/types";
-import { updateSelections, getAllSelections } from "./services/userSelections";
-import { readUserData, saveUserData } from "./services/userSavedData";
+import { update, getAllSelections } from "./services/model";
+import { readSelections, writeSelections } from "./services/selectionsService";
 import { readSettings, writeSettings } from "./services/settingsService";
 
 /* ======================== *\
@@ -27,9 +27,9 @@ app.whenReady().then(async function () {
         mainWindow.show();
     });
 
-    // Pull User Selections from file, if they exist
-    const data = await readUserData(app);
-    if (data) updateSelections(data);
+    // Load User Selections
+    const data = await readSelections();
+    update(data);
 
     // Start up event listeners
     await listenToRiotEvents();
@@ -37,7 +37,7 @@ app.whenReady().then(async function () {
 
 async function closeApp() {
     // Save Selections to a file
-    await saveUserData(app, getAllSelections());
+    // await writeSelections(getAllSelections());
     app.exit();
 }
 
@@ -47,8 +47,11 @@ async function closeApp() {
 
 ipcMain.on(
     "updateSelections",
-    function (_: IpcMainEvent, data: UserSelections) {
-        updateSelections(data);
+    async function (_: IpcMainEvent, data: UserSelections) {
+        // update Model
+        update(data);
+        // Save to File
+        await writeSelections(data);
     }
 );
 

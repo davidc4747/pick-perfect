@@ -1,44 +1,8 @@
 import { UserSelections } from "../../shared/types";
 import { AssignedPosition } from "../riot-lcu/types";
-AssignedPosition;
+import { DEFAULT_SELECTIONS } from "./selectionsService";
 
-let userSelection: UserSelections = {
-    all: {
-        ban: [17],
-        hover: [],
-        pick: [],
-    },
-
-    top: {
-        ban: [266, 24, 54],
-        hover: [],
-        pick: [],
-    },
-
-    jungle: {
-        ban: [121, 104, 64],
-        hover: [],
-        pick: [],
-    },
-
-    middle: {
-        ban: [103, 157, 238],
-        hover: [],
-        pick: [],
-    },
-
-    bottom: {
-        ban: [202, 81, 236],
-        hover: [],
-        pick: [],
-    },
-
-    utility: {
-        ban: [412, 350, 117],
-        hover: [],
-        pick: [],
-    },
-};
+let userSelection: UserSelections = DEFAULT_SELECTIONS;
 
 /* ======================== *\
     #Funcitons
@@ -63,6 +27,6 @@ export function getAllSelections(): UserSelections {
     return userSelection;
 }
 
-export function updateSelections(newUserSelection: UserSelections) {
+export function update(newUserSelection: UserSelections) {
     userSelection = newUserSelection;
 }

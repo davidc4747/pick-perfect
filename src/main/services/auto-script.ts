@@ -25,7 +25,7 @@ import {
     getMyAssignedPosition,
     getUnPickableChampions,
 } from "../riot-lcu/session-helpers";
-import { getHoverList, getBanList, getPickList } from "./userSelections";
+import { getHoverList, getBanList, getPickList } from "./model";
 import { wait } from "./utils";
 import { readSettings } from "./settingsService";
 
