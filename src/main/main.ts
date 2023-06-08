@@ -12,7 +12,7 @@ import { listenToRiotEvents } from "./services/auto-script";
 import { Settings, UserSelections } from "../shared/types";
 import { updateSelections, getAllSelections } from "./services/userSelections";
 import { readUserData, saveUserData } from "./services/userSavedData";
-import { readUserSettings, saveUserSettings } from "./services/settingsService";
+import { readSettings, writeSettings } from "./services/settingsService";
 
 /* ======================== *\
     #App
@@ -38,7 +38,6 @@ app.whenReady().then(async function () {
 async function closeApp() {
     // Save Selections to a file
     await saveUserData(app, getAllSelections());
-
     app.exit();
 }
 
@@ -58,11 +57,11 @@ ipcMain.handle("getSelections", function (): UserSelections {
 });
 
 ipcMain.on("updateSettings", function (_: IpcMainEvent, data: Settings) {
-    saveUserSettings(app, data);
+    writeSettings(data);
 });
 
 ipcMain.handle("getSettings", async function (): Promise<Settings> {
-    return await readUserSettings(app);
+    return await readSettings();
 });
 
 /* ======================== *\

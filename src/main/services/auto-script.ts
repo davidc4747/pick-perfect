@@ -27,6 +27,7 @@ import {
 } from "../riot-lcu/session-helpers";
 import { getHoverList, getBanList, getPickList } from "./userSelections";
 import { wait } from "./utils";
+import { readSettings } from "./settingsService";
 
 /* ======================== *\
     #Checking Connection
@@ -55,14 +56,25 @@ export async function listenToRiotEvents(): Promise<void> {
 \* ======================== */
 
 async function setupEvents(): Promise<void> {
-    onMatchFound(acceptReadyCheck);
-    onDodgerQueueFinished(startMatchmaking);
+    /* ------------------------- *\
+        #Matchmaking
+    \* ------------------------- */
 
+    onMatchFound(async function () {
+        // Get and up to date version of Settings
+        const { shouldAcceptReadyCheck } = await readSettings();
+        if (shouldAcceptReadyCheck) acceptReadyCheck();
+    });
+    onDodgerQueueFinished(startMatchmaking);
     onHonorCompleted(async function () {
-        // await wait(300);
-        // await openRankedLobby();
-        await wait(300);
-        await startMatchmaking();
+        // Get and up to date version of Settings
+        const { shouldRequeue } = await readSettings();
+        if (shouldRequeue) {
+            // await wait(300);
+            // await openRankedLobby();
+            await wait(300);
+            await startMatchmaking();
+        }
     });
 
     /* ------------------------- *\

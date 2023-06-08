@@ -18,13 +18,17 @@ export default function Settings(): React.ReactElement {
     const [smiteKey, setSmiteKey] = useState<SettingData["smiteKey"]>("D");
 
     function handleSave(): void {
-        electron.updateSettings({ accecptReadyCheck, requeue, smiteKey });
+        electron.updateSettings({
+            shouldAcceptReadyCheck: accecptReadyCheck,
+            shouldRequeue: requeue,
+            smiteKey,
+        });
     }
 
     useEffect(function () {
         electron.getSettings().then(function (settings: SettingData) {
-            setAcceptRC(settings.accecptReadyCheck);
-            setRequeue(settings.requeue);
+            setAcceptRC(settings.shouldAcceptReadyCheck);
+            setRequeue(settings.shouldRequeue);
             setSmiteKey(settings.smiteKey);
         });
     }, []);

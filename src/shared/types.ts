@@ -31,7 +31,7 @@ export type SelectionPhase = "ban" | "hover" | "pick";
 \* ======================== */
 
 export type Settings = {
-    accecptReadyCheck: boolean;
-    requeue: boolean;
+    shouldAcceptReadyCheck: boolean;
+    shouldRequeue: boolean;
     smiteKey: "none" | "D" | "F";
 };

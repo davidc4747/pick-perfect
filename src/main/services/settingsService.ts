@@ -1,20 +1,19 @@
 import path from "path";
+import { app } from "electron";
 import { readFile, writeFile } from "fs/promises";
 import { Settings } from "../../shared/types";
 
+const SETTING_FILE = path.join(app.getPath("userData"), "settings.json");
+
 const DEFAULT_SETTINGS: Settings = {
-    accecptReadyCheck: true,
-    requeue: true,
+    shouldAcceptReadyCheck: true,
+    shouldRequeue: true,
     smiteKey: "D",
 };
 
-function getFileName(app: Electron.App): string {
-    return path.join(app.getPath("userData"), "settings.json");
-}
-
-export async function readUserSettings(app: Electron.App): Promise<Settings> {
+export async function readSettings(): Promise<Settings> {
     try {
-        const content: string = await readFile(getFileName(app), {
+        const content: string = await readFile(SETTING_FILE, {
             encoding: "utf-8",
         });
         return JSON.parse(content);
@@ -26,11 +25,8 @@ export async function readUserSettings(app: Electron.App): Promise<Settings> {
     }
 }
 
-export async function saveUserSettings(
-    app: Electron.App,
-    settings: Settings
-): Promise<void> {
-    await writeFile(getFileName(app), JSON.stringify(settings), {
+export async function writeSettings(settings: Settings): Promise<void> {
+    await writeFile(SETTING_FILE, JSON.stringify(settings), {
         encoding: "utf-8",
     });
 }
