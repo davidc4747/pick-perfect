@@ -5,12 +5,22 @@ import { onEvent } from "./internal/lcu-websocket";
     #Matchmacking
 \* ======================== */
 
-export function onMatchFound(callback: (data: any) => void): void {
+type SearchState = {
+    errors: any[];
+    lowPriorityData: {
+        bustedLeaverAccessToken: string;
+        penalizedSummonerIds: number[];
+        penaltyTime: number;
+        penaltyTimeRemaining: number;
+        reason: string;
+    };
+    searchState: "Searching" | "Found" | "Invalid";
+};
+export function onMatchFound(callback: (data: SearchState) => void): void {
     onEvent(
         "Update",
         "/lol-lobby/v2/lobby/matchmaking/search-state",
-        function (data: any) {
-            // searchState = 'Searching' | 'Found' | 'Invalid'
+        function (data: SearchState) {
             if (data.searchState === "Found") {
                 callback(data);
             }
@@ -178,21 +188,26 @@ export function onPlayerPickCompleted(
     #Game Ended
 \* ======================== */
 
-export function onHonorCompleted(callback: (data: any) => void): void {
+type VoteCompletion = { fullTeamVote: boolean; gameId: number };
+type Recognition = {
+    displayName: string;
+    gameId: number;
+    summonerId: number;
+};
+
+export function onHonorCompleted(callback: () => void): void {
     // /lol-honor-v2/v1/honor-player
     // /lol-honor-v2/v1/recognition
     let hasTriggered = false;
-    onEvent(
-        "Create",
-        "/lol-champ-select/v1/session",
-        () => (hasTriggered = false)
-    );
-    onEvent("Create", "/lol-honor-v2/v1/vote-completion", function (data) {
-        if (!hasTriggered) callback(data);
-        hasTriggered = true;
+    onEvent("Create", "/lol-champ-select/v1/session", () => {
+        hasTriggered = false;
     });
-    onEvent("Create", "/lol-honor-v2/v1/recognition-history", function (data) {
-        if (!hasTriggered) callback(data);
-        hasTriggered = true;
-    });
+    onEvent("Create", "/lol-honor-v2/v1/vote-completion", trigger);
+    onEvent("Create", "/lol-honor-v2/v1/recognition-history", trigger);
+    function trigger(data: VoteCompletion | Recognition[]) {
+        if (!hasTriggered) {
+            callback();
+            hasTriggered = true;
+        }
+    }
 }
