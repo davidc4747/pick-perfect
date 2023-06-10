@@ -47,7 +47,7 @@ async function closeApp() {
 
 ipcMain.on(
     "updateSelections",
-    async function (_: IpcMainEvent, data: UserSelections) {
+    async function (_: IpcMainEvent, data: UserSelections): Promise<void> {
         // update Model
         update(data);
         // Save to File
@@ -59,7 +59,7 @@ ipcMain.handle("getSelections", function (): UserSelections {
     return getAllSelections();
 });
 
-ipcMain.on("updateSettings", function (_: IpcMainEvent, data: Settings) {
+ipcMain.on("updateSettings", function (_: IpcMainEvent, data: Settings): void {
     writeSettings(data);
 });
 

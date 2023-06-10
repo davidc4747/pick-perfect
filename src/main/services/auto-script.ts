@@ -65,14 +65,15 @@ async function setupEvents(): Promise<void> {
         const { shouldAcceptReadyCheck } = await readSettings();
         if (shouldAcceptReadyCheck) acceptReadyCheck();
     });
-    onDodgerQueueFinished(startMatchmaking);
+    onDodgerQueueFinished(async function () {
+        await wait(500);
+        await startMatchmaking();
+    });
     onHonorCompleted(async function () {
         // Get and up to date version of Settings
         const { shouldRequeue } = await readSettings();
         if (shouldRequeue) {
-            await wait(300);
             await openRankedLobby();
-            await wait(300);
             await startMatchmaking();
         }
     });
@@ -105,7 +106,7 @@ async function setupEvents(): Promise<void> {
         // If only a few seconds left. Lock-in something for them.
         timeout = setTimeout(
             handlePick,
-            session.timer.adjustedTimeLeftInPhase - 4000
+            session.timer.adjustedTimeLeftInPhase - 5000
         );
     });
 }
