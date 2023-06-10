@@ -1,54 +1,41 @@
 {
-    "name": "one-trick-electron",
+    "name": "one-trick",
+    "author": "David G Chung",
     "version": "1.0.0",
-    "description": "",
-    "main": "dist/main.js",
-    "targets": {
-        "main": {
-            "source": "src/main/main.ts"
-        },
-        "preload": {
-            "source": "src/main/preload.ts",
-            "context": "electron-renderer",
-            "isLibrary": true
-        },
-        "renderer": {
-            "source": "src/renderer/index.html",
-            "distDir": "dist/renderer/",
-            "publicUrl": "./"
-        }
-    },
-    "staticFiles": {
-        "staticPath": "public",
-        "watcherGlob": "**"
-    },
-    "scripts": {
-        "start": "electron .",
-        "dev": "parcel watch --no-cache",
-        "build": "parcel build",
-        "lint": "eslint src/**/*.{js,jsx,ts,tsx}",
-        "cypress": "cypress open"
-    },
+    "description": "Desktop App that automates the league of Legends champion select process",
     "keywords": [],
-    "author": "",
     "license": "ISC",
+    "main": "dist/main.js",
+    "scripts": {
+        "start": "electron-forge start",
+        "lint": "echo \"No linting configured\"",
+        "cypress": "cypress open",
+        "make": "electron-forge make",
+        "package": "electron-forge package",
+        "publish": "electron-forge publish"
+    },
     "devDependencies": {
+        "@electron-forge/cli": "^6.1.1",
+        "@electron-forge/maker-deb": "^6.1.1",
+        "@electron-forge/maker-rpm": "^6.1.1",
+        "@electron-forge/maker-squirrel": "^6.1.1",
+        "@electron-forge/maker-zip": "^6.1.1",
+        "@electron-forge/plugin-vite": "^6.1.1",
         "@types/react": "^18.0.28",
         "@types/react-dom": "^18.0.11",
         "@types/ws": "^8.5.4",
         "@typescript-eslint/eslint-plugin": "^5.55.0",
         "cypress": "^12.7.0",
+        "electron": "^25.1.0",
         "eslint": "^8.36.0",
         "eslint-plugin-jsx-a11y": "^6.7.1",
         "eslint-plugin-react": "^7.32.2",
         "eslint-plugin-react-hooks": "^4.6.0",
         "jest": "^29.5.0",
-        "parcel": "^2.8.3",
-        "parcel-reporter-static-files-copy": "^1.5.0",
-        "process": "^0.11.10"
+        "vite": "^4.3.9"
     },
     "dependencies": {
-        "electron": "^23.1.3",
+        "electron-squirrel-startup": "^1.0.0",
         "node-fetch-commonjs": "^3.2.4",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",

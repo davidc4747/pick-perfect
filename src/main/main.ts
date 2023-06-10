@@ -13,6 +13,7 @@ import { Settings, UserSelections } from "../shared/types";
 import { update, getAllSelections } from "./services/model";
 import { readSelections, writeSelections } from "./services/selectionsService";
 import { readSettings, writeSettings } from "./services/settingsService";
+declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
 
 /* ======================== *\
     #App
@@ -20,7 +21,7 @@ import { readSettings, writeSettings } from "./services/settingsService";
 
 let mainWindow: BrowserWindow;
 app.whenReady().then(async function () {
-    const appIcon = path.resolve("dist/champ-placeholder.png");
+    const appIcon = path.join(__dirname, "icon.ico");
     mainWindow = createWindow(appIcon);
     const tray = createTrayIcon(appIcon, closeApp);
     tray.on("click", function name() {
@@ -79,11 +80,16 @@ function createWindow(iconPath: string): BrowserWindow {
         show: false,
         icon: iconPath,
         webPreferences: {
-            preload: path.resolve("dist/preload/preload.js"),
+            preload: path.join(__dirname, "preload.js"),
         },
     });
 
-    win.loadFile(path.resolve("dist/renderer/index.html"));
+    // if running on DevServer or production
+    if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+        win.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+    } else {
+        win.loadFile(path.join(__dirname, "index.html"));
+    }
     win.removeMenu();
     // win.webContents.openDevTools();
     win.once("ready-to-show", () => {

@@ -2,6 +2,8 @@
 screenshots/
 assets/
 docs/
+out/
+dist/
 
 #Elm
 elm-stuff/
