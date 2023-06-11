@@ -16,13 +16,15 @@
 
 ![Animation of Auto Pick Feature](readme/auto-pick.gif)
 
-# Installing
+## Automatically Start matchmacking after honoring a teammate
+
+![Animation of Auto Queue Feature](readme/rematch.gif)
 
 # Development
 
 [![GitHub last commit](https://img.shields.io/github/last-commit/davidc4747/one-trick.svg)](https://github.com/davidc4747/one-trick) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/davidc4747/one-trick/pulls)
 
-**Tools**: Riot lcu API, React, electron, Cypress, parcel
+**Tools**: Riot lcu API, React, electron, Cypress, vite
 
 Setup:
 
@@ -30,5 +32,5 @@ Setup:
 git clone https://github.com/davidc4747/one-trick
 cd one-trick/
 npm install
-npm run dev & npm run start
+npm run start
 ```
