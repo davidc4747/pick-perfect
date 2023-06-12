@@ -22,15 +22,15 @@
 
 # Development
 
-[![GitHub last commit](https://img.shields.io/github/last-commit/davidc4747/one-trick.svg)](https://github.com/davidc4747/one-trick) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/davidc4747/one-trick/pulls)
+[![GitHub last commit](https://img.shields.io/github/last-commit/davidc4747/pick-perfect.svg)](https://github.com/davidc4747/pick-perfect) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/davidc4747/pick-perfect/pulls)
 
 **Tools**: Riot lcu API, React, electron, Cypress, vite
 
 Setup:
 
 ```shell
-git clone https://github.com/davidc4747/one-trick
-cd one-trick/
+git clone https://github.com/davidc4747/pick-perfect
+cd pick-perfect/
 npm install
 npm run start
 ```

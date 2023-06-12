@@ -1,7 +1,7 @@
 module.exports = {
     packagerConfig: {
         name: "OneTick",
-        icon: "D:/scripts/one-trick/dist/icon.ico",
+        icon: "D:/scripts/pick-perfect/dist/icon.ico",
         ignore(str) {
             return (
                 str.includes(".git") ||

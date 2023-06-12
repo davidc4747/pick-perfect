@@ -105,7 +105,7 @@ function createWindow(iconPath: string): BrowserWindow {
 
 function createTrayIcon(iconPath: string, closeApp: () => void): Tray {
     const tray = new Tray(iconPath);
-    tray.setToolTip("One Trick");
+    tray.setToolTip("Pick Perfect");
 
     const menu = [
         new MenuItem({
