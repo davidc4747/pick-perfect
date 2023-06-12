@@ -19,7 +19,7 @@ import "./commands";
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 
-import { UserSelections } from "../../src/shared/types";
+import { Settings, UserSelections } from "../../src/shared/types";
 
 Cypress.on("window:before:load", (win) => {
     let model: UserSelections = {
@@ -59,12 +59,24 @@ Cypress.on("window:before:load", (win) => {
             pick: [],
         },
     };
+    let settings: Settings = {
+        shouldAcceptReadyCheck: true,
+        shouldRequeue: true,
+        smiteKey: "D",
+    };
     win.electron = {
-        updateSelections: (data: UserSelections): void => {
+        updateSelections(data: UserSelections): void {
             model = data;
         },
         getSelections(): Promise<UserSelections> {
             return Promise.resolve(model);
+        },
+
+        updateSettings(data: Settings): void {
+            settings = data;
+        },
+        getSettings(): Promise<Settings> {
+            return Promise.resolve(settings);
         },
     };
 });

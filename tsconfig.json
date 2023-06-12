@@ -1,14 +1,11 @@
 {
-    "include": ["**/*.js", "**/*.ts", "**/*.tsx", "**/*.jsx"],
+    "include": ["**/*.ts", "**/*.tsx"],
     "exclude": ["node_modules", ".vscode"],
     "compilerOptions": {
         "target": "esnext",
         "module": "esnext",
         "moduleResolution": "Node",
         "jsx": "react-jsx",
-
-        "allowJs": true,
-        "checkJs": true,
 
         "esModuleInterop": true,
         "noImplicitAny": true,

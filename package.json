@@ -8,7 +8,7 @@
     "main": "dist/main.js",
     "scripts": {
         "start": "electron-forge start",
-        "lint": "echo \"No linting configured\"",
+        "lint": "eslint src/**/*.{js,jsx,ts,tsx}",
         "cypress": "cypress open",
         "make": "electron-forge make",
         "package": "electron-forge package",
