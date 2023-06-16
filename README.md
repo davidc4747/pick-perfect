@@ -12,11 +12,11 @@
 
 ![Auto Accept animation](readme/auto-accept.gif)
 
-## Automatically Hovers, Bans, and Picks the first available champion
+## Automatically Hover, Ban, and Pick the first available champion
 
 ![Animation of Auto Pick Feature](readme/auto-pick.gif)
 
-## Automatically Start matchmacking after honoring a teammate
+## Automatically Start matchmaking after honoring a teammate
 
 ![Animation of Auto Queue Feature](readme/rematch.gif)
 
